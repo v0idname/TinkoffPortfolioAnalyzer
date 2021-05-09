@@ -5,8 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TinkoffPortfolioAnalyzer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-
-    </Grid>
+        Title="TinkoffPortfolioAnalyzer" Height="450" Width="800">
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Tinkoff Tokens">
+                
+            </MenuItem>
+        </Menu>
+        <TabControl>
+            <TabItem Header="Portfolio">
+                <Grid >
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="99*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="199*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Portfolio Id:">
+                        </TextBlock>
+                        <ComboBox Grid.Row="0" Grid.Column="1" Name="Update" Width="600" Height="20"></ComboBox>
+                    </Grid>
+                    <DataGrid Grid.Row="1"></DataGrid>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
 </Window>

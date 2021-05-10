@@ -108,15 +108,16 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
                 throw new NotImplementedException();
 
             var portfolio = _curConnectContext.PortfolioAsync(acc.BrokerAccountId).GetAwaiter().GetResult();
-            var itemsList = new List<SecurityInfo>(portfolio.Positions.Count);
+            var itemsList = new List<PortfolioSecurityInfo>(portfolio.Positions.Count);
             foreach (var item in portfolio.Positions)
             {
-                itemsList.Add(new SecurityInfo()
+                itemsList.Add(new PortfolioSecurityInfo()
                 {
                     Ticker = item.Ticker,
                     InstrumentType = item.InstrumentType,
                     Price = item.AveragePositionPrice.Value,
-                    Currency = item.AveragePositionPrice.Currency
+                    Currency = item.AveragePositionPrice.Currency,
+                    Amount = (int)Math.Round(item.Balance)
                 });
             }
 

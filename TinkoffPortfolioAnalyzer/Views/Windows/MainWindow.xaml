@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         xmlns:local="clr-namespace:TinkoffPortfolioAnalyzer"
         xmlns:vm="clr-namespace:TinkoffPortfolioAnalyzer.ViewModels"
-        Title="TinkoffPortfolioAnalyzer" Height="400" Width="500">
+        Title="TinkoffPortfolioAnalyzer" Height="400" Width="500"
+        Icon="../../Resources/tinkofficon.ico">
     <Window.DataContext>
         <vm:MainWindowViewModel/>
     </Window.DataContext>

@@ -9,6 +9,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 {
     class MainWindowViewModel : BaseViewModel
     {
+        private Context _curConnectContext;
+
         #region SecuritiesInfo
         private IEnumerable<SecurityInfo> _securitiesInfo;
 
@@ -41,7 +43,31 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             set
             {
                 Set(ref _currentTinkoffToken, value);
-                SecuritiesInfo = GetSecuritiesInfo(value);
+                AccountTypes = GetAccounts(_currentTinkoffToken);
+            }
+        }
+        #endregion
+
+        #region AccountTypes
+        private IEnumerable<TinkoffAccount> _accountTypes;
+
+        /// <summary>
+        /// Доступные аккаунты для выбранного токена.
+        /// </summary>
+        public IEnumerable<TinkoffAccount> AccountTypes
+        {
+            get => _accountTypes;
+            set => Set(ref _accountTypes, value);
+        }
+
+        private TinkoffAccount _currentAccountType;
+        public TinkoffAccount CurrentAccountType
+        {
+            get => _currentAccountType;
+            set
+            {
+                Set(ref _currentAccountType, value);
+                SecuritiesInfo = GetSecuritiesInfo(_currentTinkoffToken, _currentAccountType);
             }
         }
         #endregion
@@ -62,20 +88,26 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             TinkoffTokens = tinkTokens;
         }
 
-        private IEnumerable<SecurityInfo> GetSecuritiesInfo(TinkoffToken token)
+        private IEnumerable<TinkoffAccount> GetAccounts(TinkoffToken token)
         {
             if (token.Type == TokenType.Sandbox)
                 throw new NotImplementedException();
 
-            // для работы в песочнице используйте GetSandboxConnection
             var connection = ConnectionFactory.GetConnection(token.Value);
-            var context = connection.Context;
-            //var sandboxAccount = await context.RegisterAsync(BrokerAccountType.Tinkoff);
-            var accounts = context.AccountsAsync().GetAwaiter().GetResult();
-            var iisAccountId = accounts.First(x => x.BrokerAccountType == BrokerAccountType.TinkoffIis).BrokerAccountId;
+            _curConnectContext = connection.Context;
 
-            // вся работа происходит асинхронно через объект контекста
-            var portfolio = context.PortfolioAsync(iisAccountId).GetAwaiter().GetResult();
+            foreach(var acc in _curConnectContext.AccountsAsync().GetAwaiter().GetResult())
+            {
+                yield return new TinkoffAccount(acc);
+            }
+        }
+
+        private IEnumerable<SecurityInfo> GetSecuritiesInfo(TinkoffToken token, Account acc)
+        {
+            if (token.Type == TokenType.Sandbox)
+                throw new NotImplementedException();
+
+            var portfolio = _curConnectContext.PortfolioAsync(acc.BrokerAccountId).GetAwaiter().GetResult();
             var itemsList = new List<SecurityInfo>(portfolio.Positions.Count);
             foreach (var item in portfolio.Positions)
             {

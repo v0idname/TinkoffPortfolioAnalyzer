@@ -67,7 +67,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             set
             {
                 Set(ref _currentAccountType, value);
-                SecuritiesInfo = GetSecuritiesInfo(_currentTinkoffToken, _currentAccountType);
+                if (_currentAccountType != null)
+                    SecuritiesInfo = GetSecuritiesInfo(_currentTinkoffToken, _currentAccountType);
             }
         }
         #endregion
@@ -90,13 +91,28 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private IEnumerable<TinkoffAccount> GetAccounts(TinkoffToken token)
         {
-            if (token.Type == TokenType.Sandbox)
-                throw new NotImplementedException();
+            switch (token.Type)
+            {
+                case TokenType.Trading:
+                    {
+                        var connection = ConnectionFactory.GetConnection(token.Value);
+                        _curConnectContext = connection.Context;
+                        break;
+                    }
 
-            var connection = ConnectionFactory.GetConnection(token.Value);
-            _curConnectContext = connection.Context;
+                case TokenType.Sandbox:
+                    {
+                        var connection = ConnectionFactory.GetSandboxConnection(token.Value);
+                        connection.Context.RegisterAsync(BrokerAccountType.Tinkoff);
+                        _curConnectContext = connection.Context;
+                        break;
+                    }
 
-            foreach(var acc in _curConnectContext.AccountsAsync().GetAwaiter().GetResult())
+                default:
+                    throw new ArgumentException("Incorrect type of token", nameof(token));
+            }
+
+            foreach (var acc in _curConnectContext.AccountsAsync().GetAwaiter().GetResult())
             {
                 yield return new TinkoffAccount(acc);
             }
@@ -104,9 +120,6 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private IEnumerable<SecurityInfo> GetSecuritiesInfo(TinkoffToken token, Account acc)
         {
-            if (token.Type == TokenType.Sandbox)
-                throw new NotImplementedException();
-
             var portfolio = _curConnectContext.PortfolioAsync(acc.BrokerAccountId).GetAwaiter().GetResult();
             var itemsList = new List<PortfolioSecurityInfo>(portfolio.Positions.Count);
             foreach (var item in portfolio.Positions)

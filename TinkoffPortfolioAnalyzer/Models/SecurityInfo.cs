@@ -4,6 +4,7 @@ namespace TinkoffPortfolioAnalyzer.Models
 {
     internal class SecurityInfo
     {
+        public string Name { get; set; }
         public string Ticker { get; set; }
         public InstrumentType InstrumentType { get; set; }
         public decimal Price { get; set; }

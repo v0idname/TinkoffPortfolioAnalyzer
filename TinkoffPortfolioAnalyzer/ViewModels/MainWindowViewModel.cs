@@ -73,6 +73,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         }
         #endregion
 
+
+
         public MainWindowViewModel()
         {
             var tinkTokens = new List<TinkoffToken>(2);
@@ -126,6 +128,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             {
                 itemsList.Add(new PortfolioSecurityInfo()
                 {
+                    Name = item.Name,
                     Ticker = item.Ticker,
                     InstrumentType = item.InstrumentType,
                     Price = item.AveragePositionPrice.Value,

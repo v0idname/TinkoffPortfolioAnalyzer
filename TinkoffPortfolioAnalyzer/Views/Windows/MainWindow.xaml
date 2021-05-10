@@ -43,7 +43,7 @@
                                   ItemsSource="{Binding AccountTypes}"
                                   SelectedItem="{Binding CurrentAccountType}"/>
                     </Grid>
-                    <DataGrid Grid.Row="2" 
+                    <DataGrid Grid.Row="2" IsReadOnly="True"
                               ItemsSource="{Binding SecuritiesInfo}"/>
                 </Grid>
             </TabItem>

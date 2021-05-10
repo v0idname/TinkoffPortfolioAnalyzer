@@ -28,7 +28,9 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Row="0" Width="Auto" Grid.Column="0" Text="Portfolio Id:"/>
-                        <ComboBox Grid.Row="0" Grid.Column="1" Width="Auto" Height="20"/>
+                        <ComboBox Grid.Row="0" Grid.Column="1" Width="Auto" Height="20"
+                                  ItemsSource="{Binding TinkoffTokens}"
+                                  SelectedItem="{Binding CurrentTinkToken}"/>
                     </Grid>
                     <DataGrid Grid.Row="1" 
                               ItemsSource="{Binding SecuritiesInfo}"/>

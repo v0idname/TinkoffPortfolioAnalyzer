@@ -27,8 +27,8 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Row="0" Width="Auto" Grid.Column="0" Text="Portfolio Id:"/>
-                        <ComboBox Grid.Row="0" Grid.Column="1" Width="Auto" Height="20"
+                        <TextBlock Grid.Row="0" Width="Auto" Height="Auto" Grid.Column="0" Text="Token:"/>
+                        <ComboBox Grid.Row="0" Grid.Column="1" Width="Auto" Height="Auto"
                                   ItemsSource="{Binding TinkoffTokens}"
                                   SelectedItem="{Binding CurrentTinkToken}"/>
                     </Grid>

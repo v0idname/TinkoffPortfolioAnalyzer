@@ -111,7 +111,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         public MainWindowViewModel()
         {
             var tinkTokens = new List<TinkoffToken>();
-            using (var sr = new StreamReader("../../../tokens.txt"))
+            using (var sr = new StreamReader("tokens.txt"))
             {
                 var fileLine = sr.ReadLine();
                 var fileLineArr = fileLine.Split(" ");

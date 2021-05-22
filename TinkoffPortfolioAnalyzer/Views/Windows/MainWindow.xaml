@@ -23,7 +23,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row="0" Width="Auto" Height="Auto" Grid.Column="0" 
-                                   Text="Token:"/>
+                                   Text="Токен:"/>
                 <ComboBox Grid.Row="0" Grid.Column="1" Width="Auto" Height="Auto"
                                   ItemsSource="{Binding TinkoffTokens}"
                                   SelectedItem="{Binding CurrentTinkToken}"/>
@@ -34,13 +34,13 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row="1" Width="Auto" Height="Auto" Grid.Column="0" 
-                                   Text="Account Type:"/>
+                                   Text="Тип аккаунта:"/>
                 <ComboBox Grid.Row="1" Grid.Column="1" Width="Auto" Height="Auto"
                                   ItemsSource="{Binding AccountTypes}"
                                   SelectedItem="{Binding CurrentAccountType}"/>
             </Grid>
             <TabControl Grid.Row="3">
-                <TabItem Header="Portfolio Securities">
+                <TabItem Header="Состав портфеля">
                     <DataGrid IsReadOnly="True"
                             ItemsSource="{Binding SecuritiesViewSource.View}"
                             AutoGenerateColumns="false">
@@ -63,7 +63,7 @@
                         </DataGrid.Columns>
                     </DataGrid>
                 </TabItem>
-                <TabItem Header="Portfolio Analisys">
+                <TabItem Header="Анализ портфеля">
                     <Grid>
                         <oxy:PlotView Model="{Binding SecuritiesPlotModel}"/>
                     </Grid>

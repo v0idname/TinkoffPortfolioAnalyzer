@@ -11,68 +11,64 @@
         <vm:MainWindowViewModel/>
     </Window.DataContext>
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="Tinkoff Tokens">
-            </MenuItem>
-        </Menu>
-        <TabControl>
-            <TabItem Header="Portfolio Securities">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="400*"/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Row="0" Width="Auto" Height="Auto" Grid.Column="0" 
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="400*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Width="Auto" Height="Auto" Grid.Column="0" 
                                    Text="Token:"/>
-                        <ComboBox Grid.Row="0" Grid.Column="1" Width="Auto" Height="Auto"
+                <ComboBox Grid.Row="0" Grid.Column="1" Width="Auto" Height="Auto"
                                   ItemsSource="{Binding TinkoffTokens}"
                                   SelectedItem="{Binding CurrentTinkToken}"/>
-                    </Grid>
-                    <Grid Grid.Row="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="Auto"/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Row="1" Width="Auto" Height="Auto" Grid.Column="0" 
+            </Grid>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="1" Width="Auto" Height="Auto" Grid.Column="0" 
                                    Text="Account Type:"/>
-                        <ComboBox Grid.Row="1" Grid.Column="1" Width="Auto" Height="Auto"
+                <ComboBox Grid.Row="1" Grid.Column="1" Width="Auto" Height="Auto"
                                   ItemsSource="{Binding AccountTypes}"
                                   SelectedItem="{Binding CurrentAccountType}"/>
-                    </Grid>
-                    <DataGrid Grid.Row="2" IsReadOnly="True"
-                              ItemsSource="{Binding SecuritiesViewSource.View}"
-                              AutoGenerateColumns="false">
+            </Grid>
+            <TabControl Grid.Row="3">
+                <TabItem Header="Portfolio Securities">
+                    <DataGrid IsReadOnly="True"
+                            ItemsSource="{Binding SecuritiesViewSource.View}"
+                            AutoGenerateColumns="false">
                         <DataGrid.Columns>
                             <DataGridTextColumn 
-                                Header="Название" Binding="{Binding Name}"/>
+                            Header="Название" Binding="{Binding Name}"/>
                             <DataGridTextColumn 
-                                Header="Тикер"
-                                Binding="{Binding Ticker}"/>
+                            Header="Тикер"
+                            Binding="{Binding Ticker}"/>
                             <DataGridTextColumn
-                                Header="Тип" Binding="{Binding InstrumentType}"/>
+                            Header="Тип" Binding="{Binding InstrumentType}"/>
                             <DataGridTextColumn
-                                Header="Тек. цена" Binding="{Binding Price}"/>
+                            Header="Тек. цена" Binding="{Binding Price}"/>
                             <DataGridTextColumn
-                                Header="Кол-во" Binding="{Binding Amount}"/>
+                            Header="Кол-во" Binding="{Binding Amount}"/>
                             <DataGridTextColumn
-                                Header="Стоимость" Binding="{Binding TotalPrice}"/>
+                            Header="Стоимость" Binding="{Binding TotalPrice}"/>
                             <DataGridTextColumn
-                                Header="Валюта" Binding="{Binding Currency}"/>
+                            Header="Валюта" Binding="{Binding Currency}"/>
                         </DataGrid.Columns>
                     </DataGrid>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Portfolio Analisys">
-                <Grid>
-                    <oxy:PlotView Model="{Binding SecuritiesPlotModel}"/>
-                </Grid>
-            </TabItem>
-        </TabControl>
+                </TabItem>
+                <TabItem Header="Portfolio Analisys">
+                    <Grid>
+                        <oxy:PlotView Model="{Binding SecuritiesPlotModel}"/>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
     </DockPanel>
 </Window>

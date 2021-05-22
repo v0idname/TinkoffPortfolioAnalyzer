@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:local="clr-namespace:TinkoffPortfolioAnalyzer"
-        xmlns:vm="clr-namespace:TinkoffPortfolioAnalyzer.ViewModels"
+        xmlns:vm="clr-namespace:TinkoffPortfolioAnalyzer.ViewModels" d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
         Title="TinkoffPortfolioAnalyzer" Height="400" Width="500"
         Icon="../../Resources/tinkofficon.ico">
     <Window.DataContext>
@@ -29,7 +29,8 @@
                             <ColumnDefinition Width="Auto"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
-                        <TextBlock Grid.Row="0" Width="Auto" Height="Auto" Grid.Column="0" Text="Token:"/>
+                        <TextBlock Grid.Row="0" Width="Auto" Height="Auto" Grid.Column="0" 
+                                   Text="Token:"/>
                         <ComboBox Grid.Row="0" Grid.Column="1" Width="Auto" Height="Auto"
                                   ItemsSource="{Binding TinkoffTokens}"
                                   SelectedItem="{Binding CurrentTinkToken}"/>
@@ -45,14 +46,31 @@
                                   SelectedItem="{Binding CurrentAccountType}"/>
                     </Grid>
                     <DataGrid Grid.Row="2" IsReadOnly="True"
-                              ItemsSource="{Binding SecuritiesInfo}"/>
+                              ItemsSource="{Binding SecuritiesInfo}"
+                              AutoGenerateColumns="false">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn 
+                                Header="Название" Binding="{Binding Name}"/>
+                            <DataGridTextColumn 
+                                Header="Тикер"
+                                Binding="{Binding Ticker}"/>
+                            <DataGridTextColumn
+                                Header="Тип" Binding="{Binding InstrumentType}"/>
+                            <DataGridTextColumn
+                                Header="Тек. цена" Binding="{Binding Price}"/>
+                            <DataGridTextColumn
+                                Header="Кол-во" Binding="{Binding Amount}"/>
+                            <DataGridTextColumn
+                                Header="Стоимость" Binding="{Binding TotalPrice}"/>
+                            <DataGridTextColumn
+                                Header="Валюта" Binding="{Binding Currency}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
                 </Grid>
             </TabItem>
             <TabItem Header="Portfolio Analisys">
                 <Grid>
-                    <oxy:PlotView Model="{Binding SecuritiesPlotModel}">
-                        
-                    </oxy:PlotView>
+                    <oxy:PlotView Model="{Binding SecuritiesPlotModel}"/>
                 </Grid>
             </TabItem>
         </TabControl>

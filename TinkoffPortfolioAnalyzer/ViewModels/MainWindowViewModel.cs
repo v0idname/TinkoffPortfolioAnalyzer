@@ -2,7 +2,9 @@
 using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Windows.Data;
 using Tinkoff.Trading.OpenApi.Models;
 using Tinkoff.Trading.OpenApi.Network;
 using TinkoffPortfolioAnalyzer.Models;
@@ -22,7 +24,13 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         public IEnumerable<PortfolioSecurityInfo> SecuritiesInfo
         {
             get => _securitiesInfo;
-            set => Set(ref _securitiesInfo, value);
+            set
+            {
+                Set(ref _securitiesInfo, value);
+                SecuritiesViewSource.Source = SecuritiesInfo;
+                SecuritiesViewSource.SortDescriptions.Clear();
+                SecuritiesViewSource.SortDescriptions.Add(new SortDescription("TotalPrice", ListSortDirection.Descending));
+            }
         }
         #endregion
 
@@ -90,6 +98,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             set => Set(ref _secStats, value);
         }
         #endregion
+
+        public CollectionViewSource SecuritiesViewSource { get; } = new CollectionViewSource();
 
         public MainWindowViewModel()
         {

@@ -3,6 +3,7 @@ using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Data;
 using Tinkoff.Trading.OpenApi.Models;
@@ -103,17 +104,18 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         public MainWindowViewModel()
         {
-            var tinkTokens = new List<TinkoffToken>(2);
-            tinkTokens.Add(new TinkoffToken()
+            var tinkTokens = new List<TinkoffToken>();
+            using (var sr = new StreamReader("../../../tokens.txt"))
             {
-                Type = TokenType.Trading,
-                Value = "t.zbKUmxP9SRmY14raZfJewpclgi0It5QO53eSoAalFM8uuTN82d--xg8H-swG61jd0z0lx2F9-0B8kGYLKhWzxw"
-            });
-            tinkTokens.Add(new TinkoffToken()
-            {
-                Type = TokenType.Sandbox,
-                Value = "t.qnjT83GCBu8TWdiXRcuqCnUXoh_Z-sstY0eyhq9duzZ8uKqZfOzLeculB8A3lou_Rl7pfMF6k8wvIp-6kNVBxQ"
-            });
+                var fileLine = sr.ReadLine();
+                var fileLineArr = fileLine.Split(" ");
+                if (fileLineArr[0] == TokenType.Trading.ToString())
+                    tinkTokens.Add(new TinkoffToken()
+                    {
+                        Type = TokenType.Trading,
+                        Value = fileLineArr[1]
+                    });
+            }
             TinkoffTokens = tinkTokens;
         }
 

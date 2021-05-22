@@ -159,13 +159,16 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         private PlotModel GetSecuritiesPlotModel()
         {
             var plotModel = new PlotModel();
-            var pieSeries = new PieSeries();
+            var pieSeries = new PieSeries()
+            {
+                InsideLabelFormat = "",
+                OutsideLabelFormat = "{1}: {2:0.0}%",
+            };
             
-            foreach (var security in SecuritiesInfo)
+            foreach (var security in SecuritiesInfo.OrderBy(x => x.TotalPrice))
             {
                 pieSeries.Slices.Add(new PieSlice(security.Name, decimal.ToDouble(security.TotalPrice)));
             }
-
             plotModel.Series.Add(pieSeries);
             return plotModel;
         }

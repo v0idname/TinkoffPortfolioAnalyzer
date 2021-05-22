@@ -9,7 +9,7 @@ using TinkoffPortfolioAnalyzer.Models;
 
 namespace TinkoffPortfolioAnalyzer.ViewModels
 {
-    class MainWindowViewModel : BaseViewModel
+    class MainWindowViewModel : Library.ViewModels.BaseViewModel
     {
         private Context _curConnectContext;
 

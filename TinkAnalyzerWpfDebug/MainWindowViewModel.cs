@@ -1,11 +1,17 @@
-﻿using OxyPlot;
+﻿using Library.ViewModels;
+using OxyPlot;
 using OxyPlot.Series;
 
 namespace TinkAnalyzerWpfDebug
 {
-    class MainWindowViewModel
+    class MainWindowViewModel : BaseViewModel
     {
-        public PlotModel plotModel = new PlotModel();
+        private PlotModel _plotModel = new PlotModel();
+        public PlotModel PlotModel 
+        {
+            get => _plotModel;
+            set => Set(ref _plotModel, value); 
+        }
 
         public MainWindowViewModel()
         {
@@ -14,7 +20,7 @@ namespace TinkAnalyzerWpfDebug
             {
                 pieSeries.Slices.Add(new PieSlice($"slice {i}", i));
             }
-            plotModel.Series.Add(pieSeries);
+            _plotModel.Series.Add(pieSeries);
         }
     }
 }

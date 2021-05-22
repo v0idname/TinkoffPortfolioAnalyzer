@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Data;
 using Tinkoff.Trading.OpenApi.Models;
 using Tinkoff.Trading.OpenApi.Network;
@@ -44,7 +45,11 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         public IEnumerable<TinkoffToken> TinkoffTokens
         {
             get => _tinkoffTokens;
-            set => Set(ref _tinkoffTokens, value);
+            set
+            {
+                Set(ref _tinkoffTokens, value);
+                CurrentTinkToken = TinkoffTokens.First();
+            }
         }
 
         private TinkoffToken _currentTinkoffToken;
@@ -54,7 +59,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             set
             {
                 Set(ref _currentTinkoffToken, value);
-                AccountTypes = GetAccounts(_currentTinkoffToken);
+                AccountTypes = GetAccounts(CurrentTinkToken).GetAwaiter().GetResult();
+                CurrentAccountType = AccountTypes.First();
             }
         }
         #endregion
@@ -119,7 +125,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             TinkoffTokens = tinkTokens;
         }
 
-        private IEnumerable<TinkoffAccount> GetAccounts(TinkoffToken token)
+        private async Task<IEnumerable<TinkoffAccount>> GetAccounts(TinkoffToken token)
         {
             switch (token.Type)
             {
@@ -133,7 +139,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
                 case TokenType.Sandbox:
                     {
                         var connection = ConnectionFactory.GetSandboxConnection(token.Value);
-                        connection.Context.RegisterAsync(BrokerAccountType.Tinkoff);
+                        await connection.Context.RegisterAsync(BrokerAccountType.Tinkoff);
                         _curConnectContext = connection.Context;
                         break;
                     }
@@ -142,10 +148,11 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
                     throw new ArgumentException("Incorrect type of token", nameof(token));
             }
 
-            foreach (var acc in _curConnectContext.AccountsAsync().GetAwaiter().GetResult())
-            {
-                yield return new TinkoffAccount(acc);
-            }
+            var accList = new List<TinkoffAccount>();
+            var accs = _curConnectContext.AccountsAsync().GetAwaiter().GetResult();
+            foreach (var acc in accs)
+                accList.Add(new TinkoffAccount(acc));
+            return accList;
         }
 
         private IEnumerable<PortfolioSecurityInfo> GetSecuritiesInfo(TinkoffToken token, Account acc)

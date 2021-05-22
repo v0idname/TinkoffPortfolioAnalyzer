@@ -1,4 +1,6 @@
-﻿using System;
+﻿using OxyPlot;
+using OxyPlot.Series;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Tinkoff.Trading.OpenApi.Models;
@@ -12,12 +14,12 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         private Context _curConnectContext;
 
         #region SecuritiesInfo
-        private IEnumerable<SecurityInfo> _securitiesInfo;
+        private IEnumerable<PortfolioSecurityInfo> _securitiesInfo;
 
         /// <summary>
         /// Информация о ценных бумагах из портфеля.
         /// </summary>
-        public IEnumerable<SecurityInfo> SecuritiesInfo
+        public IEnumerable<PortfolioSecurityInfo> SecuritiesInfo
         {
             get => _securitiesInfo;
             set => Set(ref _securitiesInfo, value);
@@ -68,12 +70,26 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             {
                 Set(ref _currentAccountType, value);
                 if (_currentAccountType != null)
+                {
                     SecuritiesInfo = GetSecuritiesInfo(_currentTinkoffToken, _currentAccountType);
+                    SecuritiesPlotModel = GetSecuritiesPlotModel();
+                }
             }
         }
         #endregion
 
+        #region SecuritiesPlotModel
+        private PlotModel _secStats;
 
+        /// <summary>
+        /// Доступные аккаунты для выбранного токена.
+        /// </summary>
+        public PlotModel SecuritiesPlotModel
+        {
+            get => _secStats;
+            set => Set(ref _secStats, value);
+        }
+        #endregion
 
         public MainWindowViewModel()
         {
@@ -120,7 +136,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             }
         }
 
-        private IEnumerable<SecurityInfo> GetSecuritiesInfo(TinkoffToken token, Account acc)
+        private IEnumerable<PortfolioSecurityInfo> GetSecuritiesInfo(TinkoffToken token, Account acc)
         {
             var portfolio = _curConnectContext.PortfolioAsync(acc.BrokerAccountId).GetAwaiter().GetResult();
             var itemsList = new List<PortfolioSecurityInfo>(portfolio.Positions.Count);
@@ -138,6 +154,20 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             }
 
             return itemsList;
+        }
+
+        private PlotModel GetSecuritiesPlotModel()
+        {
+            var plotModel = new PlotModel();
+            var pieSeries = new PieSeries();
+            
+            foreach (var security in SecuritiesInfo)
+            {
+                pieSeries.Slices.Add(new PieSlice(security.Name, decimal.ToDouble(security.TotalPrice)));
+            }
+
+            plotModel.Series.Add(pieSeries);
+            return plotModel;
         }
     }
 }

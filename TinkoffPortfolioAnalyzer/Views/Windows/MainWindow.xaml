@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+        xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:local="clr-namespace:TinkoffPortfolioAnalyzer"
         xmlns:vm="clr-namespace:TinkoffPortfolioAnalyzer.ViewModels"
         Title="TinkoffPortfolioAnalyzer" Height="400" Width="500"
@@ -16,7 +17,7 @@
             </MenuItem>
         </Menu>
         <TabControl>
-            <TabItem Header="Portfolio">
+            <TabItem Header="Portfolio Securities">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -45,6 +46,13 @@
                     </Grid>
                     <DataGrid Grid.Row="2" IsReadOnly="True"
                               ItemsSource="{Binding SecuritiesInfo}"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Portfolio Analisys">
+                <Grid>
+                    <oxy:PlotView Model="{Binding SecuritiesPlotModel}">
+                        
+                    </oxy:PlotView>
                 </Grid>
             </TabItem>
         </TabControl>

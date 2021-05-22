@@ -86,7 +86,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
                 Set(ref _currentAccountType, value);
                 if (_currentAccountType != null)
                 {
-                    SecuritiesInfo = GetSecuritiesInfo(_currentTinkoffToken, _currentAccountType);
+                    SecuritiesInfo = GetSecuritiesInfo(_currentAccountType);
                     SecuritiesPlotModel = GetSecuritiesPlotModel();
                 }
             }
@@ -155,7 +155,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             return accList;
         }
 
-        private IEnumerable<PortfolioSecurityInfo> GetSecuritiesInfo(TinkoffToken token, Account acc)
+        private IEnumerable<PortfolioSecurityInfo> GetSecuritiesInfo(Account acc)
         {
             var portfolio = _curConnectContext.PortfolioAsync(acc.BrokerAccountId).GetAwaiter().GetResult();
             var itemsList = new List<PortfolioSecurityInfo>(portfolio.Positions.Count);

@@ -80,9 +80,7 @@
                         <GroupBox Grid.Column="0" Header="Даты выгруза доступных бумаг">
                             <DockPanel>
                                 <Button Content="Выгрузить данные" DockPanel.Dock="Bottom"/>
-                                <ListBox SelectionMode="Multiple">
-                                    <ListBoxItem Content="date 1"/>
-                                    <ListBoxItem Content="date 2"/>
+                                <ListBox SelectionMode="Multiple" ItemsSource="{Binding AvailSecSnapshots}">
                                 </ListBox>
                             </DockPanel>
                         </GroupBox>

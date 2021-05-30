@@ -65,9 +65,17 @@
                 </TabItem>
                 <TabItem Header="Анализ портфеля">
                     <Grid>
-                        <oxy:PlotView Model="{Binding SecuritiesPlotModel}"/>
+                        <oxy:PlotView Model="{Binding SecuritiesPlotModel}" Margin="0,5,0,5"/>
                     </Grid>
                 </TabItem>
+                <!--<TabItem Header="Доступные бумаги">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="400*"/>
+                        </Grid.RowDefinitions>
+                        <DataGrid Grid.Row="0"/>
+                    </Grid>
+                </TabItem>-->
             </TabControl>
         </Grid>
     </DockPanel>

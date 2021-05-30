@@ -68,14 +68,29 @@
                         <oxy:PlotView Model="{Binding SecuritiesPlotModel}" Margin="0,5,0,5"/>
                     </Grid>
                 </TabItem>
-                <!--<TabItem Header="Доступные бумаги">
+                <TabItem Header="Доступные бумаги">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="400*"/>
                         </Grid.RowDefinitions>
-                        <DataGrid Grid.Row="0"/>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <GroupBox Grid.Column="0" Header="Даты выгруза доступных бумаг">
+                            <DockPanel>
+                                <Button Content="Выгрузить данные" DockPanel.Dock="Bottom"/>
+                                <ListBox SelectionMode="Multiple">
+                                    <ListBoxItem Content="date 1"/>
+                                    <ListBoxItem Content="date 2"/>
+                                </ListBox>
+                            </DockPanel>
+                        </GroupBox>
+                        <GroupBox Grid.Column="1" Header="Отличия между данными">
+                            
+                        </GroupBox>
                     </Grid>
-                </TabItem>-->
+                </TabItem>
             </TabControl>
         </Grid>
     </DockPanel>

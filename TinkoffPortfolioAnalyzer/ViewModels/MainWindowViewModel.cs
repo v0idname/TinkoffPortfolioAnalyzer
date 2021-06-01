@@ -163,10 +163,10 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             {
                 var newSnapshot = new AvailSecSnapshot
                 {
-                    CreatedDateTime = DateTime.Now,
+                    CreatedDateTime = new DateTime(DateTime.Now.Ticks).AddDays(snapIndex),
                     Securities = new List<SecurityInfo>()
                 };
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < 10 + snapIndex; i++)
                 {
                     newSnapshot.Securities.Add(new SecurityInfo
                     {

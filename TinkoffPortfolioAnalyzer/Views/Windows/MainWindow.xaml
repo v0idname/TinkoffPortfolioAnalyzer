@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         xmlns:oxy="http://oxyplot.org/wpf"
         xmlns:vm="clr-namespace:TinkoffPortfolioAnalyzer.ViewModels" 
+        xmlns:mo="clr-namespace:TinkoffPortfolioAnalyzer.Models"
         Title="TinkoffPortfolioAnalyzer" Height="400" Width="500"
         Icon="../../Resources/tinkofficon.ico">
     <Window.DataContext>
@@ -81,6 +82,15 @@
                             <DockPanel>
                                 <Button Content="Выгрузить данные" DockPanel.Dock="Bottom"/>
                                 <ListBox SelectionMode="Multiple" ItemsSource="{Binding AvailSecSnapshots}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate DataType="mo:AvailSecSnapshots">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding CreatedDateTime, StringFormat=yyyy-MM-dd HH:mm:ss}"/>
+                                                <TextBlock Text="{Binding Securities.Count, StringFormat=(бумаг: {0})}" 
+                                                    Margin="3,0,0,0"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
                                 </ListBox>
                             </DockPanel>
                         </GroupBox>

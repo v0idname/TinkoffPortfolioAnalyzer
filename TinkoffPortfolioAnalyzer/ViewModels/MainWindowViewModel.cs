@@ -12,6 +12,7 @@ using Library.Commands;
 using Tinkoff.Trading.OpenApi.Models;
 using Tinkoff.Trading.OpenApi.Network;
 using TinkoffPortfolioAnalyzer.Models;
+using System.Collections.ObjectModel;
 
 namespace TinkoffPortfolioAnalyzer.ViewModels
 {
@@ -113,6 +114,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         //TODO: ObservableCollection ??
         public List<AvailSecSnapshot> AvailSecSnapshots { get; }
 
+        public List<AvailSecSnapshot> SelectedAvailSecSnapshots { get; set; }
+
         public ICommand CreateSnapshotCommand { get; }
 
         private bool CanCreateSnapshotCommandExecute(object p) => true;
@@ -137,6 +140,15 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             //    });
             //}
             //AvailSecSnapshots.Add(newSnapshot);
+        }
+
+        public ICommand SelectedSnapChangedCommand { get; }
+
+        private bool CanSelectedSnapChangedCommandExecute(object p) => true;
+
+        private void OnSelectedSnapChangedCommandExecuted(object p)
+        {
+            ;
         }
         #endregion
 
@@ -180,6 +192,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             }
             
             CreateSnapshotCommand = new RelayCommand(OnCreateSnapshotCommandExecuted, CanCreateSnapshotCommandExecute);
+            SelectedSnapChangedCommand = new RelayCommand(OnSelectedSnapChangedCommandExecuted, CanSelectedSnapChangedCommandExecute);
+            SelectedAvailSecSnapshots = new List<AvailSecSnapshot>();
         }
 
         private async Task<IEnumerable<TinkoffAccount>> GetAccounts(TinkoffToken token)

@@ -72,6 +72,9 @@
                 </TabItem>
                 <TabItem Header="Доступные бумаги">
                     <Grid>
+                        <Grid.DataContext>
+                            <vm:AvailSecuritiesViewModel/>
+                        </Grid.DataContext>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="400*"/>
                         </Grid.RowDefinitions>

@@ -106,7 +106,33 @@
                             </DockPanel>
                         </GroupBox>
                         <GroupBox Grid.Column="1" Header="Отличия между данными">
-                            
+                            <DataGrid IsReadOnly="True"
+                                    ItemsSource="{Binding SecSnapshotDiffs}"
+                                    AutoGenerateColumns="false">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn 
+                                        Header="Название" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn 
+                                        Header="Тикер"
+                                        Binding="{Binding Ticker}"/>
+                                    <DataGridCheckBoxColumn Binding="{Binding IsSnap0Contains}">
+                                        <DataGridCheckBoxColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding DataContext.SelectedSnap0Name, 
+                                                    RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
+                                            </DataTemplate>
+                                        </DataGridCheckBoxColumn.HeaderTemplate>
+                                    </DataGridCheckBoxColumn>
+                                    <DataGridCheckBoxColumn Binding="{Binding IsSnap1Contains}">
+                                        <DataGridCheckBoxColumn.HeaderTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding DataContext.SelectedSnap1Name, 
+                                                        RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
+                                            </DataTemplate>
+                                        </DataGridCheckBoxColumn.HeaderTemplate>
+                                    </DataGridCheckBoxColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
                         </GroupBox>
                     </Grid>
                 </TabItem>

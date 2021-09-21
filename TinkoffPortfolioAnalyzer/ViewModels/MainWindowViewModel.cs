@@ -1,4 +1,6 @@
-﻿using OxyPlot;
+﻿using Library.Commands;
+using Microsoft.Win32;
+using OxyPlot;
 using OxyPlot.Series;
 using System;
 using System.Collections.Generic;
@@ -7,9 +9,11 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Input;
 using Tinkoff.Trading.OpenApi.Models;
 using Tinkoff.Trading.OpenApi.Network;
 using TinkoffPortfolioAnalyzer.Models;
+using TinkoffPortfolioAnalyzer.Properties;
 
 namespace TinkoffPortfolioAnalyzer.ViewModels
 {
@@ -110,19 +114,28 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         public MainWindowViewModel()
         {
+            OpenTokensFileCommand = new RelayCommand(OnOpenTokensFileCommandExecuted, CanOpenTokensFileCommandExecute);
+
             var tinkTokens = new List<TinkoffToken>();
-            using (var sr = new StreamReader("./tokens.txt"))
+            try
             {
-                var fileLine = sr.ReadLine();
-                var fileLineArr = fileLine.Split(" ");
-                if (fileLineArr[0] == TokenType.Trading.ToString())
-                    tinkTokens.Add(new TinkoffToken()
-                    {
-                        Type = TokenType.Trading,
-                        Value = fileLineArr[1]
-                    });
+                using (var sr = new StreamReader(Settings.Default.TokenFileName))
+                {
+                    var fileLine = sr.ReadLine();
+                    var fileLineArr = fileLine.Split(" ");
+                    if (fileLineArr[0] == TokenType.Trading.ToString())
+                        tinkTokens.Add(new TinkoffToken()
+                        {
+                            Type = TokenType.Trading,
+                            Value = fileLineArr[1]
+                        });
+                }
+                TinkoffTokens = tinkTokens;
             }
-            TinkoffTokens = tinkTokens;
+            catch (ArgumentException)
+            {
+
+            }
         }
 
         private async Task<IEnumerable<TinkoffAccount>> GetAccounts(TinkoffToken token)
@@ -190,6 +203,21 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             }
             plotModel.Series.Add(pieSeries);
             return plotModel;
+        }
+
+        public ICommand OpenTokensFileCommand { get; }
+
+        private bool CanOpenTokensFileCommandExecute(object o) => true;
+
+        private void OnOpenTokensFileCommandExecuted(object o)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
+            if (openFileDialog.ShowDialog() == true)
+            {
+                Settings.Default.TokenFileName = openFileDialog.FileName;
+                Settings.Default.Save();
+            }
         }
     }
 }

@@ -2,24 +2,21 @@
 using Microsoft.Win32;
 using OxyPlot;
 using OxyPlot.Series;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
-using Tinkoff.Trading.OpenApi.Models;
-using Tinkoff.Trading.OpenApi.Network;
 using TinkoffPortfolioAnalyzer.Models;
 using TinkoffPortfolioAnalyzer.Properties;
+using TinkoffPortfolioAnalyzer.Services;
 
 namespace TinkoffPortfolioAnalyzer.ViewModels
 {
     class MainWindowViewModel : Library.ViewModels.BaseViewModel
     {
-        private Context _curConnectContext;
+        private DataService _dataService = new DataService();
 
         #region SecuritiesInfo
         private IEnumerable<PortfolioSecurityInfo> _securitiesInfo;
@@ -63,7 +60,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             set
             {
                 Set(ref _currentTinkoffToken, value);
-                AccountTypes = GetAccounts(CurrentTinkToken).GetAwaiter().GetResult();
+                AccountTypes = _dataService.GetAccounts(CurrentTinkToken).GetAwaiter().GetResult();
                 CurrentAccountType = AccountTypes.First();
             }
         }
@@ -90,7 +87,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
                 Set(ref _currentAccountType, value);
                 if (_currentAccountType != null)
                 {
-                    SecuritiesInfo = GetSecuritiesInfo(_currentAccountType);
+                    SecuritiesInfo = _dataService.GetSecuritiesInfo(_currentAccountType);
                     SecuritiesPlotModel = GetSecuritiesPlotModel();
                 }
             }
@@ -115,77 +112,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         public MainWindowViewModel()
         {
             OpenTokensFileCommand = new RelayCommand(OnOpenTokensFileCommandExecuted, CanOpenTokensFileCommandExecute);
-
-            var tinkTokens = new List<TinkoffToken>();
-            try
-            {
-                using (var sr = new StreamReader(Settings.Default.TokenFileName))
-                {
-                    var fileLine = sr.ReadLine();
-                    var fileLineArr = fileLine.Split(" ");
-                    if (fileLineArr[0] == TokenType.Trading.ToString())
-                        tinkTokens.Add(new TinkoffToken()
-                        {
-                            Type = TokenType.Trading,
-                            Value = fileLineArr[1]
-                        });
-                }
-                TinkoffTokens = tinkTokens;
-            }
-            catch (ArgumentException)
-            {
-
-            }
-        }
-
-        private async Task<IEnumerable<TinkoffAccount>> GetAccounts(TinkoffToken token)
-        {
-            switch (token.Type)
-            {
-                case TokenType.Trading:
-                    {
-                        var connection = ConnectionFactory.GetConnection(token.Value);
-                        _curConnectContext = connection.Context;
-                        break;
-                    }
-
-                case TokenType.Sandbox:
-                    {
-                        var connection = ConnectionFactory.GetSandboxConnection(token.Value);
-                        await connection.Context.RegisterAsync(BrokerAccountType.Tinkoff);
-                        _curConnectContext = connection.Context;
-                        break;
-                    }
-
-                default:
-                    throw new ArgumentException("Incorrect type of token", nameof(token));
-            }
-
-            var accList = new List<TinkoffAccount>();
-            var accs = _curConnectContext.AccountsAsync().GetAwaiter().GetResult();
-            foreach (var acc in accs)
-                accList.Add(new TinkoffAccount(acc));
-            return accList;
-        }
-
-        private IEnumerable<PortfolioSecurityInfo> GetSecuritiesInfo(Account acc)
-        {
-            var portfolio = _curConnectContext.PortfolioAsync(acc.BrokerAccountId).GetAwaiter().GetResult();
-            var itemsList = new List<PortfolioSecurityInfo>(portfolio.Positions.Count);
-            foreach (var item in portfolio.Positions)
-            {
-                itemsList.Add(new PortfolioSecurityInfo()
-                {
-                    Name = item.Name,
-                    Ticker = item.Ticker,
-                    InstrumentType = item.InstrumentType,
-                    Price = item.AveragePositionPrice.Value,
-                    Currency = item.AveragePositionPrice.Currency,
-                    Amount = (int)Math.Round(item.Balance)
-                });
-            }
-
-            return itemsList;
+            TinkoffTokens = _dataService.GetTokens(Settings.Default.TokenFileName);
         }
 
         private PlotModel GetSecuritiesPlotModel()

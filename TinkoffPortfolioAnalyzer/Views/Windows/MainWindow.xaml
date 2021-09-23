@@ -1,12 +1,11 @@
 ﻿<Window x:Class="TinkoffPortfolioAnalyzer.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
-        xmlns:bhv="http://schemas.microsoft.com/xaml/behaviors"
-        xmlns:oxy="http://oxyplot.org/wpf"
-        xmlns:vm="clr-namespace:TinkoffPortfolioAnalyzer.ViewModels" 
-        xmlns:mo="clr-namespace:TinkoffPortfolioAnalyzer.Models"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:TinkoffPortfolioAnalyzer.ViewModels"
+        xmlns:views="clr-namespace:TinkoffPortfolioAnalyzer.Views"
+        mc:Ignorable="d"
         Title="TinkoffPortfolioAnalyzer" Height="400" Width="500"
         Icon="../../Resources/tinkofficon.ico">
     <Window.DataContext>
@@ -54,98 +53,13 @@
             </Grid>
             <TabControl Grid.Row="3">
                 <TabItem Header="Состав портфеля">
-                    <DataGrid IsReadOnly="True"
-                            ItemsSource="{Binding SecuritiesViewSource.View}"
-                            AutoGenerateColumns="false">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn 
-                            Header="Название" Binding="{Binding Name}"/>
-                            <DataGridTextColumn 
-                            Header="Тикер"
-                            Binding="{Binding Ticker}"/>
-                            <DataGridTextColumn
-                            Header="Тип" Binding="{Binding InstrumentType}"/>
-                            <DataGridTextColumn
-                            Header="Тек. цена" Binding="{Binding Price}"/>
-                            <DataGridTextColumn
-                            Header="Кол-во" Binding="{Binding Amount}"/>
-                            <DataGridTextColumn
-                            Header="Стоимость" Binding="{Binding TotalPrice}"/>
-                            <DataGridTextColumn
-                            Header="Валюта" Binding="{Binding Currency}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
+                    <views:PortfolioTableView/>
                 </TabItem>
                 <TabItem Header="Анализ портфеля">
-                    <Grid>
-                        <oxy:PlotView Model="{Binding SecuritiesPlotModel}" Margin="0,5,0,5"/>
-                    </Grid>
+                    <views:PortfolioPlotView/>
                 </TabItem>
                 <TabItem Header="Доступные бумаги">
-                    <Grid>
-                        <Grid.DataContext>
-                            <vm:AvailSecuritiesViewModel/>
-                        </Grid.DataContext>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="400*"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition/>
-                            <ColumnDefinition/>
-                        </Grid.ColumnDefinitions>
-                        <GroupBox Grid.Column="0" Header="Даты выгруза доступных бумаг">
-                            <DockPanel>
-                                <Button Content="Выгрузить данные" DockPanel.Dock="Bottom"/>
-                                <ListBox SelectionMode="Multiple" ItemsSource="{Binding AvailSecSnapshots}"
-                                    vm:SelectedItems.Items="{Binding SelectedAvailSecSnapshots}">
-                                    <bhv:Interaction.Triggers>
-                                        <bhv:EventTrigger EventName="SelectionChanged">
-                                            <bhv:InvokeCommandAction Command="{Binding SelectedSnapChangedCommand}" 
-                                                                     PassEventArgsToCommand="True"/>
-                                        </bhv:EventTrigger>
-                                    </bhv:Interaction.Triggers>
-                                    <ListBox.ItemTemplate>
-                                        <DataTemplate DataType="mo:AvailSecSnapshots">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding CreatedDateTime, StringFormat=yyyy-MM-dd HH:mm:ss}"/>
-                                                <TextBlock Text="{Binding Securities.Count, StringFormat=(бумаг: {0})}" 
-                                                    Margin="3,0,0,0"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ListBox.ItemTemplate>
-                                </ListBox>
-                            </DockPanel>
-                        </GroupBox>
-                        <GroupBox Grid.Column="1" Header="Отличия между данными">
-                            <DataGrid IsReadOnly="True"
-                                    ItemsSource="{Binding SecSnapshotDiffs}"
-                                    AutoGenerateColumns="false">
-                                <DataGrid.Columns>
-                                    <DataGridTextColumn 
-                                        Header="Название" Binding="{Binding Name}"/>
-                                    <DataGridTextColumn 
-                                        Header="Тикер"
-                                        Binding="{Binding Ticker}"/>
-                                    <DataGridCheckBoxColumn Binding="{Binding IsSnap0Contains}">
-                                        <DataGridCheckBoxColumn.HeaderTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding DataContext.SelectedSnap0Name, 
-                                                    RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
-                                            </DataTemplate>
-                                        </DataGridCheckBoxColumn.HeaderTemplate>
-                                    </DataGridCheckBoxColumn>
-                                    <DataGridCheckBoxColumn Binding="{Binding IsSnap1Contains}">
-                                        <DataGridCheckBoxColumn.HeaderTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding DataContext.SelectedSnap1Name, 
-                                                        RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
-                                            </DataTemplate>
-                                        </DataGridCheckBoxColumn.HeaderTemplate>
-                                    </DataGridCheckBoxColumn>
-                                </DataGrid.Columns>
-                            </DataGrid>
-                        </GroupBox>
-                    </Grid>
+                    <views:AvailSecuritiesView/>
                 </TabItem>
             </TabControl>
         </Grid>

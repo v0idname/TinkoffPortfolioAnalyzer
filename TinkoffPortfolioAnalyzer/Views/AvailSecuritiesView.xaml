@@ -30,7 +30,7 @@
                         </bhv:EventTrigger>
                     </bhv:Interaction.Triggers>
                     <ListBox.ItemTemplate>
-                        <DataTemplate DataType="mo:AvailSecSnapshots">
+                        <DataTemplate DataType="AvailSecSnapshots">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="{Binding CreatedDateTime, StringFormat=yyyy-MM-dd HH:mm:ss}"/>
                                 <TextBlock Text="{Binding Securities.Count, StringFormat=(бумаг: {0})}" 

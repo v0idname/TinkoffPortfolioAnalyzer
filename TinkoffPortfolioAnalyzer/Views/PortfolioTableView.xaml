@@ -1,14 +1,13 @@
 ﻿<UserControl x:Class="TinkoffPortfolioAnalyzer.Views.PortfolioTableView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:TinkoffPortfolioAnalyzer.Views"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <DataGrid IsReadOnly="True"
-                            ItemsSource="{Binding SecuritiesViewSource.View}"
-                            AutoGenerateColumns="false">
+            ItemsSource="{Binding SecuritiesViewSource.View}"
+            AutoGenerateColumns="false">
         <DataGrid.Columns>
             <DataGridTextColumn Header="Название" Binding="{Binding Name}"/>
             <DataGridTextColumn Header="Тикер" Binding="{Binding Ticker}"/>

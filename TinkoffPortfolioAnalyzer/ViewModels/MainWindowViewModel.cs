@@ -1,7 +1,5 @@
 ﻿using Library.Commands;
 using Microsoft.Win32;
-using OxyPlot;
-using OxyPlot.Series;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -17,6 +15,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
     class MainWindowViewModel : Library.ViewModels.BaseViewModel
     {
         private DataService _dataService = new DataService();
+        public PortfolioPlotViewModel PlotViewModel { get; }
 
         #region SecuritiesInfo
         private IEnumerable<PortfolioSecurityInfo> _securitiesInfo;
@@ -33,6 +32,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
                 SecuritiesViewSource.Source = SecuritiesInfo;
                 SecuritiesViewSource.SortDescriptions.Clear();
                 SecuritiesViewSource.SortDescriptions.Add(new SortDescription("TotalPrice", ListSortDirection.Descending));
+                PlotViewModel?.RefreshSecuritiesPlotModel(SecuritiesInfo);
             }
         }
         #endregion
@@ -49,7 +49,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             set
             {
                 Set(ref _tinkoffTokens, value);
-                CurrentTinkToken = TinkoffTokens.First();
+                if (_tinkoffTokens.Count() > 0)
+                    CurrentTinkToken = TinkoffTokens.First();
             }
         }
 
@@ -88,22 +89,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
                 if (_currentAccountType != null)
                 {
                     SecuritiesInfo = _dataService.GetSecuritiesInfo(_currentAccountType);
-                    SecuritiesPlotModel = GetSecuritiesPlotModel();
                 }
             }
-        }
-        #endregion
-
-        #region SecuritiesPlotModel
-        private PlotModel _secStats;
-
-        /// <summary>
-        /// Доступные аккаунты для выбранного токена.
-        /// </summary>
-        public PlotModel SecuritiesPlotModel
-        {
-            get => _secStats;
-            set => Set(ref _secStats, value);
         }
         #endregion
 
@@ -111,25 +98,11 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         public MainWindowViewModel()
         {
+            //Debug.WriteLine("MainWindowViewModel()");
             OpenTokensFileCommand = new RelayCommand(OnOpenTokensFileCommandExecuted, CanOpenTokensFileCommandExecute);
             TinkoffTokens = _dataService.GetTokens(Settings.Default.TokenFileName);
-        }
-
-        private PlotModel GetSecuritiesPlotModel()
-        {
-            var plotModel = new PlotModel();
-            var pieSeries = new PieSeries()
-            {
-                InsideLabelFormat = "",
-                OutsideLabelFormat = "{1}: {2:0.0}%",
-            };
-            
-            foreach (var security in SecuritiesInfo.OrderBy(x => x.TotalPrice))
-            {
-                pieSeries.Slices.Add(new PieSlice(security.Name, decimal.ToDouble(security.TotalPrice)));
-            }
-            plotModel.Series.Add(pieSeries);
-            return plotModel;
+            PlotViewModel = new PortfolioPlotViewModel();
+            PlotViewModel?.RefreshSecuritiesPlotModel(SecuritiesInfo);
         }
 
         public ICommand OpenTokensFileCommand { get; }

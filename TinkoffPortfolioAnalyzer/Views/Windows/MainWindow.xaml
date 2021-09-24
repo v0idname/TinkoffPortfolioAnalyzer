@@ -35,10 +35,11 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row="0" Width="Auto" Height="Auto" Grid.Column="0" 
-                                   Text="Токен:"/>
+                          Margin="4" Text="Токен:" VerticalAlignment="Center"/>
                 <ComboBox Grid.Row="0" Grid.Column="1" Width="Auto" Height="Auto"
-                                  ItemsSource="{Binding TinkoffTokens}"
-                                  SelectedItem="{Binding CurrentTinkToken}"/>
+                          Margin="2,2,2,0" VerticalAlignment="Center"
+                          ItemsSource="{Binding TinkoffTokens}"
+                          SelectedItem="{Binding CurrentTinkToken}"/>
             </Grid>
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
@@ -46,12 +47,13 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Row="1" Width="Auto" Height="Auto" Grid.Column="0" 
-                                   Text="Тип аккаунта:"/>
+                          Margin="4" Text="Тип аккаунта:" VerticalAlignment="Center"/>
                 <ComboBox Grid.Row="1" Grid.Column="1" Width="Auto" Height="Auto"
-                                  ItemsSource="{Binding AccountTypes}"
-                                  SelectedItem="{Binding CurrentAccountType}"/>
+                          Margin="2,2,2,0" VerticalAlignment="Center"
+                          ItemsSource="{Binding AccountTypes}"
+                          SelectedItem="{Binding CurrentAccountType}"/>
             </Grid>
-            <TabControl Grid.Row="3">
+            <TabControl Grid.Row="3" Margin="0,2">
                 <TabItem Header="Состав портфеля">
                     <views:PortfolioTableView/>
                 </TabItem>

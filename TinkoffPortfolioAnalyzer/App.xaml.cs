@@ -35,6 +35,7 @@ namespace TinkoffPortfolioAnalyzer
         {
             services.AddSingleton<DataService>();
             services.AddSingleton<MainWindowViewModel>();
+            services.AddSingleton<AvailSecuritiesViewModel>();
         }
     }
 }

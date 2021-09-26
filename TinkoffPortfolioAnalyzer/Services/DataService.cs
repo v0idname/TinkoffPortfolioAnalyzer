@@ -53,7 +53,7 @@ namespace TinkoffPortfolioAnalyzer.Services
                 case TokenType.Sandbox:
                     {
                         var connection = ConnectionFactory.GetSandboxConnection(token.Value);
-                        await connection.Context.RegisterAsync(BrokerAccountType.Tinkoff);
+                        await connection.Context.RegisterAsync(BrokerAccountType.Tinkoff).ConfigureAwait(false);
                         _curConnectContext = connection.Context;
                         break;
                     }
@@ -63,7 +63,7 @@ namespace TinkoffPortfolioAnalyzer.Services
             }
 
             var accList = new List<TinkoffAccount>();
-            var accs = _curConnectContext.AccountsAsync().GetAwaiter().GetResult();
+            var accs = await _curConnectContext.AccountsAsync().ConfigureAwait(false);
             foreach (var acc in accs)
                 accList.Add(new TinkoffAccount(acc));
             return accList;

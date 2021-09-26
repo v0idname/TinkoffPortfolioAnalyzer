@@ -58,7 +58,7 @@
                     <views:PortfolioTableView/>
                 </TabItem>
                 <TabItem Header="Анализ портфеля">
-                    <views:PortfolioPlotView DataContext="{Binding PlotViewModel}"/>
+                    <views:PortfolioPlotView/>
                 </TabItem>
                 <TabItem Header="Доступные бумаги">
                     <views:AvailSecuritiesView/>

@@ -5,10 +5,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:vm="clr-namespace:TinkoffPortfolioAnalyzer.ViewModels" 
-             d:DataContext="{d:DesignInstance Type=vm:PortfolioPlotViewModel}"
+             d:DataContext="{d:DesignInstance Type=vm:MainWindowViewModel}"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <oxy:PlotView Model="{Binding SecuritiesPlotModel}" Margin="0,5,0,5"/>
+        <oxy:Plot>
+            <oxy:PieSeries ItemsSource="{Binding SecuritiesViewSource.View}"
+                       InsideLabelFormat=""
+                       OutsideLabelFormat=" {1}: {2:0.0}%"
+                       StartAngle="225"
+                       LabelField="Name" ValueField="TotalPrice"/>
+        </oxy:Plot>
     </Grid>
 </UserControl>

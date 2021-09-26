@@ -15,7 +15,6 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
     class MainWindowViewModel : Library.ViewModels.BaseViewModel
     {
         private DataService _dataService = new DataService();
-        public PortfolioPlotViewModel PlotViewModel { get; }
 
         #region SecuritiesInfo
         private IEnumerable<PortfolioSecurityInfo> _securitiesInfo;
@@ -32,7 +31,6 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
                 SecuritiesViewSource.Source = SecuritiesInfo;
                 SecuritiesViewSource.SortDescriptions.Clear();
                 SecuritiesViewSource.SortDescriptions.Add(new SortDescription("TotalPrice", ListSortDirection.Descending));
-                PlotViewModel?.RefreshSecuritiesPlotModel(SecuritiesInfo);
             }
         }
         #endregion
@@ -101,8 +99,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             //Debug.WriteLine("MainWindowViewModel()");
             OpenTokensFileCommand = new RelayCommand(OnOpenTokensFileCommandExecuted, CanOpenTokensFileCommandExecute);
             TinkoffTokens = _dataService.GetTokens(Settings.Default.TokenFileName);
-            PlotViewModel = new PortfolioPlotViewModel();
-            PlotViewModel?.RefreshSecuritiesPlotModel(SecuritiesInfo);
+            //PlotViewModel = new PortfolioPlotViewModel();
+            //PlotViewModel?.RefreshSecuritiesPlotModel(SecuritiesInfo);
         }
 
         public ICommand OpenTokensFileCommand { get; }

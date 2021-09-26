@@ -1,6 +1,4 @@
 ﻿using Library.Commands;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Win32;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,7 +14,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 {
     class MainWindowViewModel : Library.ViewModels.BaseViewModel
     {
-        private DataService _dataService;
+        private IDataService _dataService;
 
         #region SecuritiesInfo
         private IEnumerable<PortfolioSecurityInfo> _securitiesInfo;
@@ -96,9 +94,9 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         public CollectionViewSource SecuritiesViewSource { get; } = new CollectionViewSource();
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(IDataService dataService)
         {
-            _dataService = App.Host.Services.GetRequiredService<DataService>();
+            _dataService = dataService;
             OpenTokensFileCommand = new RelayCommand(OnOpenTokensFileCommandExecuted, CanOpenTokensFileCommandExecute);
             TinkoffTokens = _dataService.GetTokens(Settings.Default.TokenFileName);
         }

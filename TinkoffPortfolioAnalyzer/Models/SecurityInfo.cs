@@ -8,12 +8,12 @@ namespace TinkoffPortfolioAnalyzer.Models
         public string Name { get; set; }
         public string Ticker { get; set; }
         public InstrumentType InstrumentType { get; set; }
-        public decimal Price { get; set; }
+        
         public Currency Currency { get; set; }
 
         public bool Equals(SecurityInfo other)
         {
-            return Ticker == other.Ticker;
+            return Ticker == other?.Ticker;
         }
 
         public override int GetHashCode()

@@ -2,10 +2,13 @@
 using Library.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
 using Tinkoff.Trading.OpenApi.Models;
 using TinkoffPortfolioAnalyzer.Models;
+using TinkoffPortfolioAnalyzer.Services;
 
 namespace TinkoffPortfolioAnalyzer.ViewModels
 {
@@ -37,6 +40,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         }
 
         public string _selectedSnap1Name;
+        private readonly IDataService _dataService;
+
         public string SelectedSnap1Name
         {
             get => _selectedSnap1Name;
@@ -47,26 +52,23 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private bool CanCreateSnapshotCommandExecute(object p) => true;
 
-        private void OnCreateSnapshotCommandExecuted(object p)
+        private async void OnCreateSnapshotCommandExecuted(object p)
         {
-            //var newSnapshot = new AvailSecSnapshot
-            //{
-            //    CreatedDateTime = DateTime.Now,
-            //    Securities = new List<SecurityInfo>()
-            //};
+            var secList = await _dataService.GetMarketSecuritiesAsync();
 
-            //var bonds = _curConnectContext.MarketBondsAsync().GetAwaiter().GetResult();
-            //foreach (var bond in bonds.Instruments)
+            var dateTimeNow = DateTime.Now;
+            var dateTimeStr = dateTimeNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            Directory.CreateDirectory("./Snapshots");
+            //using (var stream = File.OpenWrite($"./Snapshots/{dateTimeStr}.txt"))
             //{
-            //    newSnapshot.Securities.Add(new SecurityInfo
-            //    {
-            //        Name = bond.Name,
-            //        Ticker = bond.Ticker,
-            //        InstrumentType = bond.Type,
-            //        Currency = bond.Currency
-            //    });
+                
             //}
-            //AvailSecSnapshots.Add(newSnapshot);
+            var newSnapshot = new AvailSecSnapshot
+            {
+                CreatedDateTime = dateTimeNow,
+                Securities = secList.List
+            };
+            AvailSecSnapshots.Add(newSnapshot);
         }
 
         public ICommand SelectedSnapChangedCommand { get; }
@@ -82,7 +84,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
                 SelectedSnap1Name = SelectedAvailSecSnapshots[1].CreatedDateTime.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
-        public AvailSecuritiesViewModel()
+        public AvailSecuritiesViewModel(IDataService dataService)
         {
             AvailSecSnapshots = new List<AvailSecSnapshot>();
             for (int snapIndex = 0; snapIndex < 3; snapIndex++)
@@ -108,6 +110,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             CreateSnapshotCommand = new RelayCommand(OnCreateSnapshotCommandExecuted, CanCreateSnapshotCommandExecute);
             SelectedSnapChangedCommand = new RelayCommand(OnSelectedSnapChangedCommandExecuted, CanSelectedSnapChangedCommandExecute);
             SelectedAvailSecSnapshots = new List<AvailSecSnapshot>();
+            _dataService = dataService;
         }
 
         private List<SecSnapshotDiff> GetSecSnapshotDiffs(List<AvailSecSnapshot> snaps)

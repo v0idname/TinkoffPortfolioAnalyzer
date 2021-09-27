@@ -88,5 +88,14 @@ namespace TinkoffPortfolioAnalyzer.Services
 
             return itemsList;
         }
+
+        public async Task<SecurityInfoList> GetMarketSecuritiesAsync()
+        {
+            var secList = new SecurityInfoList();
+            secList.AddMarketInstList(await _curConnectContext.MarketBondsAsync().ConfigureAwait(false));
+            secList.AddMarketInstList(await _curConnectContext.MarketEtfsAsync().ConfigureAwait(false));
+            secList.AddMarketInstList(await _curConnectContext.MarketStocksAsync().ConfigureAwait(false));
+            return secList;
+        }
     }
 }

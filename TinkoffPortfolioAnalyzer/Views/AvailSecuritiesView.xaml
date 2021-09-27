@@ -18,21 +18,26 @@
         </Grid.ColumnDefinitions>
         <GroupBox Grid.Column="0" Header="Даты выгруза доступных бумаг">
             <DockPanel>
-                <Button Content="Выгрузить данные" DockPanel.Dock="Bottom"/>
-                <ListBox SelectionMode="Multiple" ItemsSource="{Binding AvailSecSnapshots}"
-                                    vm:SelectedItems.Items="{Binding SelectedAvailSecSnapshots}">
+                <Button Content="Выгрузить данные" DockPanel.Dock="Bottom" 
+                        Command="{Binding CreateSnapshotCommand}"/>
+                <ListBox SelectionMode="Multiple" 
+                         ItemsSource="{Binding AvailSecSnapshots}"
+                         vm:SelectedItems.Items="{Binding SelectedAvailSecSnapshots}">
                     <bhv:Interaction.Triggers>
                         <bhv:EventTrigger EventName="SelectionChanged">
-                            <bhv:InvokeCommandAction Command="{Binding SelectedSnapChangedCommand}" 
-                                                                     PassEventArgsToCommand="True"/>
+                            <bhv:InvokeCommandAction 
+                                Command="{Binding SelectedSnapChangedCommand}" 
+                                PassEventArgsToCommand="True"/>
                         </bhv:EventTrigger>
                     </bhv:Interaction.Triggers>
                     <ListBox.ItemTemplate>
                         <DataTemplate DataType="AvailSecSnapshots">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding CreatedDateTime, StringFormat=yyyy-MM-dd HH:mm:ss}"/>
-                                <TextBlock Text="{Binding Securities.Count, StringFormat=(бумаг: {0})}" 
-                                                    Margin="3,0,0,0"/>
+                                <TextBlock Text="{Binding CreatedDateTime, 
+                                    StringFormat=yyyy-MM-dd HH:mm:ss}"/>
+                                <TextBlock Text="{Binding Securities.Count, 
+                                    StringFormat=(бумаг: {0})}" 
+                                           Margin="3,0,0,0"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

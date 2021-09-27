@@ -20,5 +20,10 @@ namespace TinkoffPortfolioAnalyzer.Models
         {
             return string.GetHashCode(Ticker);
         }
+
+        public override bool Equals(object obj)
+        {
+            return Equals(obj as SecurityInfo);
+        }
     }
 }

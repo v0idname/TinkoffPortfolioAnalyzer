@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Tinkoff.Trading.OpenApi.Models;
 
 namespace TinkoffPortfolioAnalyzer.Models
 {
-    internal class SecurityInfoList
+    [Serializable]
+    public class SecurityInfoList
     {
         List<SecurityInfo> _list = new();
 

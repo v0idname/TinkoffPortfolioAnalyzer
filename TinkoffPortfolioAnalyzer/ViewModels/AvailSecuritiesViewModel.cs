@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using System.Xml.Serialization;
 using Tinkoff.Trading.OpenApi.Models;
 using TinkoffPortfolioAnalyzer.Models;
 using TinkoffPortfolioAnalyzer.Services;
@@ -59,10 +60,14 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             var dateTimeNow = DateTime.Now;
             var dateTimeStr = dateTimeNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
             Directory.CreateDirectory("./Snapshots");
-            //using (var stream = File.OpenWrite($"./Snapshots/{dateTimeStr}.txt"))
-            //{
-                
-            //}
+
+            XmlSerializer formatter = new XmlSerializer(typeof(SecurityInfoList));
+            using (var stream = File.OpenWrite($"./Snapshots/{dateTimeStr}.xml"))
+            {
+                //formatter.Serialize(stream, secList.List);
+                formatter.Serialize(stream, secList);
+            }
+
             var newSnapshot = new AvailSecSnapshot
             {
                 CreatedDateTime = dateTimeNow,

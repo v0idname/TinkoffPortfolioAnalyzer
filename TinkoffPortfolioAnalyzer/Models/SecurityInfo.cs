@@ -3,7 +3,8 @@ using Tinkoff.Trading.OpenApi.Models;
 
 namespace TinkoffPortfolioAnalyzer.Models
 {
-    internal class SecurityInfo : IEquatable<SecurityInfo>
+    [Serializable]
+    public class SecurityInfo : IEquatable<SecurityInfo>
     {
         public string Name { get; set; }
         public string Ticker { get; set; }

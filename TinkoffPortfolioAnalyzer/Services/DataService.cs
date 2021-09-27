@@ -80,7 +80,7 @@ namespace TinkoffPortfolioAnalyzer.Services
                     Name = item.Name,
                     Ticker = item.Ticker,
                     InstrumentType = item.InstrumentType,
-                    Price = item.AveragePositionPrice.Value,
+                    AveragePrice = item.AveragePositionPrice.Value,
                     Currency = item.AveragePositionPrice.Currency,
                     Amount = (int)Math.Round(item.Balance)
                 });

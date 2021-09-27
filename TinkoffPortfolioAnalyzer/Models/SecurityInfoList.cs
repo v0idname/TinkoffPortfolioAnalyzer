@@ -16,7 +16,6 @@ namespace TinkoffPortfolioAnalyzer.Models
                     Name = item.Name,
                     Ticker = item.Ticker,
                     InstrumentType = item.Type,
-                    Price = 0,
                     Currency = item.Currency
                 }).ToList());
         }

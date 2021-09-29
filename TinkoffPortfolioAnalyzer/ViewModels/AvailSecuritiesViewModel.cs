@@ -81,6 +81,16 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
                 SelectedSnap1Name = SelectedAvailSecSnapshots[1].CreatedDateTime.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
+        public ICommand DeleteSnapshotCommand { get; }
+
+        private bool CanDeleteSnapshotCommandExecute(object p) => true;
+
+        private void OnDeleteSnapshotCommandExecuted(object p)
+        {
+            _snapService.DeleteSnapshot((AvailSecSnapshot)p);
+            AvailSecSnapshots = _snapService.GetSnapshots();
+        }
+
         public AvailSecuritiesViewModel(IDataService dataService, ISnapshotService snapService)
         {
             //AvailSecSnapshots = new List<AvailSecSnapshot>();
@@ -108,6 +118,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             _dataService = dataService;
             CreateSnapshotCommand = new RelayCommand(OnCreateSnapshotCommandExecuted, CanCreateSnapshotCommandExecute);
             SelectedSnapChangedCommand = new RelayCommand(OnSelectedSnapChangedCommandExecuted, CanSelectedSnapChangedCommandExecute);
+            DeleteSnapshotCommand = new RelayCommand(OnDeleteSnapshotCommandExecuted, CanDeleteSnapshotCommandExecute);
             SelectedAvailSecSnapshots = new List<AvailSecSnapshot>();
             AvailSecSnapshots = _snapService.GetSnapshots();
         }

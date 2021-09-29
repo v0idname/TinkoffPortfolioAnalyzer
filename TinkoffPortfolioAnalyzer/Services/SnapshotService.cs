@@ -49,6 +49,12 @@ namespace TinkoffPortfolioAnalyzer.Services
             _availSecSnapshots.Add(newSnapshot);
         }
 
+        public void DeleteSnapshot(AvailSecSnapshot snapshotToDelete)
+        {
+            _availSecSnapshots.Remove(snapshotToDelete);
+            File.Delete($"{SnapPath}/{snapshotToDelete.CreatedDateTime.ToString(DateTimeFormat)}.xml");
+        }
+
         public IEnumerable<AvailSecSnapshot> GetSnapshots()
         {
             return _availSecSnapshots;

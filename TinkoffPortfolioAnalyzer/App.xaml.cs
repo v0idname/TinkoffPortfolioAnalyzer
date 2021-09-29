@@ -34,6 +34,7 @@ namespace TinkoffPortfolioAnalyzer
         public static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
         {
             services.AddSingleton<IDataService, DataService>();
+            services.AddSingleton<ISnapshotService, SnapshotService>();
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<AvailSecuritiesViewModel>();
         }

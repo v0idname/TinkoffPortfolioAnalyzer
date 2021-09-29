@@ -1,13 +1,8 @@
 ﻿using Library.Commands;
 using Library.ViewModels;
-using System;
 using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Windows.Input;
-using System.Xml.Serialization;
-using Tinkoff.Trading.OpenApi.Models;
 using TinkoffPortfolioAnalyzer.Models;
 using TinkoffPortfolioAnalyzer.Services;
 
@@ -15,10 +10,23 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 {
     internal class AvailSecuritiesViewModel : BaseViewModel
     {
-        //TODO: ObservableCollection ??
-        public List<AvailSecSnapshot> AvailSecSnapshots { get; }
+        private readonly IDataService _dataService;
+        private readonly ISnapshotService _snapService;
 
         public List<AvailSecSnapshot> SelectedAvailSecSnapshots { get; set; }
+
+        private IEnumerable<AvailSecSnapshot> _availSecSnapshots;
+        public IEnumerable<AvailSecSnapshot> AvailSecSnapshots
+        {
+            get
+            {
+                return _availSecSnapshots;
+            }
+            set
+            {
+                Set(ref _availSecSnapshots, value);
+            }
+        }
 
         private List<SecSnapshotDiff> _secSnapshotDiffs;
         public List<SecSnapshotDiff> SecSnapshotDiffs
@@ -41,7 +49,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         }
 
         public string _selectedSnap1Name;
-        private readonly IDataService _dataService;
+        
 
         public string SelectedSnap1Name
         {
@@ -56,24 +64,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         private async void OnCreateSnapshotCommandExecuted(object p)
         {
             var secList = await _dataService.GetMarketSecuritiesAsync();
-
-            var dateTimeNow = DateTime.Now;
-            var dateTimeStr = dateTimeNow.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-            Directory.CreateDirectory("./Snapshots");
-
-            XmlSerializer formatter = new XmlSerializer(typeof(SecurityInfoList));
-            using (var stream = File.OpenWrite($"./Snapshots/{dateTimeStr}.xml"))
-            {
-                //formatter.Serialize(stream, secList.List);
-                formatter.Serialize(stream, secList);
-            }
-
-            var newSnapshot = new AvailSecSnapshot
-            {
-                CreatedDateTime = dateTimeNow,
-                Securities = secList.List
-            };
-            AvailSecSnapshots.Add(newSnapshot);
+            _snapService.CreateSnapshot(secList);
+            AvailSecSnapshots = _snapService.GetSnapshots();
         }
 
         public ICommand SelectedSnapChangedCommand { get; }
@@ -89,33 +81,35 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
                 SelectedSnap1Name = SelectedAvailSecSnapshots[1].CreatedDateTime.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
-        public AvailSecuritiesViewModel(IDataService dataService)
+        public AvailSecuritiesViewModel(IDataService dataService, ISnapshotService snapService)
         {
-            AvailSecSnapshots = new List<AvailSecSnapshot>();
-            for (int snapIndex = 0; snapIndex < 3; snapIndex++)
-            {
-                var newSnapshot = new AvailSecSnapshot
-                {
-                    CreatedDateTime = new DateTime(DateTime.Now.Ticks).AddDays(snapIndex),
-                    Securities = new List<SecurityInfo>()
-                };
-                for (int i = 0; i < 10 + snapIndex; i++)
-                {
-                    newSnapshot.Securities.Add(new SecurityInfo
-                    {
-                        Name = $"Security name {i}",
-                        Ticker = $"Security ticker {i}",
-                        InstrumentType = InstrumentType.Bond,
-                        Currency = Currency.Rub
-                    });
-                }
-                AvailSecSnapshots.Add(newSnapshot);
-            }
+            //AvailSecSnapshots = new List<AvailSecSnapshot>();
+            //for (int snapIndex = 0; snapIndex < 3; snapIndex++)
+            //{
+            //    var newSnapshot = new AvailSecSnapshot
+            //    {
+            //        CreatedDateTime = new DateTime(DateTime.Now.Ticks).AddDays(snapIndex),
+            //        Securities = new List<SecurityInfo>()
+            //    };
+            //    for (int i = 0; i < 10 + snapIndex; i++)
+            //    {
+            //        newSnapshot.Securities.Add(new SecurityInfo
+            //        {
+            //            Name = $"Security name {i}",
+            //            Ticker = $"Security ticker {i}",
+            //            InstrumentType = InstrumentType.Bond,
+            //            Currency = Currency.Rub
+            //        });
+            //    }
+            //    AvailSecSnapshots.Add(newSnapshot);
+            //}
 
+            _snapService = snapService;
+            _dataService = dataService;
             CreateSnapshotCommand = new RelayCommand(OnCreateSnapshotCommandExecuted, CanCreateSnapshotCommandExecute);
             SelectedSnapChangedCommand = new RelayCommand(OnSelectedSnapChangedCommandExecuted, CanSelectedSnapChangedCommandExecute);
             SelectedAvailSecSnapshots = new List<AvailSecSnapshot>();
-            _dataService = dataService;
+            AvailSecSnapshots = _snapService.GetSnapshots();
         }
 
         private List<SecSnapshotDiff> GetSecSnapshotDiffs(List<AvailSecSnapshot> snaps)

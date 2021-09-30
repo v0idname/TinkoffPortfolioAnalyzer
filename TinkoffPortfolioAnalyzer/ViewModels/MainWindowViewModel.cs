@@ -59,7 +59,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             set
             {
                 Set(ref _currentTinkoffToken, value);
-                AccountTypes = _dataService.GetAccounts(CurrentTinkToken).GetAwaiter().GetResult();
+                AccountTypes = _dataService.GetAccountsAsync(CurrentTinkToken).GetAwaiter().GetResult();
                 CurrentAccountType = AccountTypes.First();
             }
         }
@@ -84,10 +84,6 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             set
             {
                 Set(ref _currentAccountType, value);
-                if (_currentAccountType != null)
-                {
-                    SecuritiesInfo = _dataService.GetSecuritiesInfo(_currentAccountType);
-                }
             }
         }
         #endregion
@@ -97,8 +93,17 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         public MainWindowViewModel(IDataService dataService)
         {
             _dataService = dataService;
+            PropertyChanged += MainWindowViewModel_PropertyChanged;
             OpenTokensFileCommand = new RelayCommand(OnOpenTokensFileCommandExecuted, CanOpenTokensFileCommandExecute);
             TinkoffTokens = _dataService.GetTokens(Settings.Default.TokenFileName);
+        }
+
+        private async void MainWindowViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(CurrentAccountType) && _currentAccountType != null)
+            {
+                SecuritiesInfo = await _dataService.GetSecuritiesInfoAsync(_currentAccountType);
+            }
         }
 
         public ICommand OpenTokensFileCommand { get; }

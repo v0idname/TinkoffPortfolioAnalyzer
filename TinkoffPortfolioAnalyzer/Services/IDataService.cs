@@ -7,8 +7,8 @@ namespace TinkoffPortfolioAnalyzer.Services
 {
     internal interface IDataService
     {
-        Task<IEnumerable<TinkoffAccount>> GetAccounts(TinkoffToken token);
-        IEnumerable<PortfolioSecurityInfo> GetSecuritiesInfo(Account acc);
+        Task<IEnumerable<TinkoffAccount>> GetAccountsAsync(TinkoffToken token);
+        Task<IEnumerable<PortfolioSecurityInfo>> GetSecuritiesInfoAsync(Account acc);
         IEnumerable<TinkoffToken> GetTokens(string fileName);
         Task<SecurityInfoList> GetMarketSecuritiesAsync();
     }

@@ -39,7 +39,7 @@ namespace TinkoffPortfolioAnalyzer.Services
             return tinkTokens;
         }
 
-        public async Task<IEnumerable<TinkoffAccount>> GetAccounts(TinkoffToken token)
+        public async Task<IEnumerable<TinkoffAccount>> GetAccountsAsync(TinkoffToken token)
         {
             switch (token.Type)
             {
@@ -69,9 +69,9 @@ namespace TinkoffPortfolioAnalyzer.Services
             return accList;
         }
 
-        public IEnumerable<PortfolioSecurityInfo> GetSecuritiesInfo(Account acc)
+        public async Task<IEnumerable<PortfolioSecurityInfo>> GetSecuritiesInfoAsync(Account acc)
         {
-            var portfolio = _curConnectContext.PortfolioAsync(acc.BrokerAccountId).GetAwaiter().GetResult();
+            var portfolio = await _curConnectContext.PortfolioAsync(acc.BrokerAccountId).ConfigureAwait(false);
             var itemsList = new List<PortfolioSecurityInfo>(portfolio.Positions.Count);
             foreach (var item in portfolio.Positions)
             {

@@ -340,4 +340,5 @@ ASALocalRun/
 healthchecksdb
 
 # Custom files
-tokens.txt
+*tokens.txt
+*token.txt

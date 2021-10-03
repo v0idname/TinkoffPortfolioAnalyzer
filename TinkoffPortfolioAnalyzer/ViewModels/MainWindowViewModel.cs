@@ -59,9 +59,6 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             set
             {
                 Set(ref _currentTinkoffToken, value);
-                AccountTypes = _dataService.GetAccountsAsync(CurrentTinkToken).GetAwaiter().GetResult();
-                if (AccountTypes.Count() > 0)
-                    CurrentAccountType = AccountTypes.First();
             }
         }
         #endregion
@@ -101,9 +98,15 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private async void MainWindowViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(CurrentAccountType) && _currentAccountType != null)
+            if (e.PropertyName == nameof(CurrentAccountType) && CurrentAccountType != null)
             {
-                SecuritiesInfo = await _dataService.GetSecuritiesInfoAsync(_currentAccountType);
+                SecuritiesInfo = await _dataService.GetSecuritiesInfoAsync(CurrentAccountType);
+            }
+            else if (e.PropertyName == nameof(CurrentTinkToken) && CurrentTinkToken != null)
+            {
+                AccountTypes = await _dataService.GetAccountsAsync(CurrentTinkToken);
+                if (AccountTypes.Count() > 0)
+                    CurrentAccountType = AccountTypes.First();
             }
         }
 

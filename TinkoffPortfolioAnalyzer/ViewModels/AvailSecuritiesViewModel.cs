@@ -15,30 +15,13 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         public List<AvailSecSnapshot> SelectedAvailSecSnapshots { get; set; }
 
-        private IEnumerable<AvailSecSnapshot> _availSecSnapshots;
-        public IEnumerable<AvailSecSnapshot> AvailSecSnapshots
-        {
-            get
-            {
-                return _availSecSnapshots;
-            }
-            set
-            {
-                Set(ref _availSecSnapshots, value);
-            }
-        }
+        public IEnumerable<AvailSecSnapshot> AvailSecSnapshots => _snapService.GetSnapshots();
 
         private List<SecSnapshotDiff> _secSnapshotDiffs;
         public List<SecSnapshotDiff> SecSnapshotDiffs
         {
-            get
-            {
-                return _secSnapshotDiffs;
-            }
-            set
-            {
-                Set(ref _secSnapshotDiffs, value);
-            }
+            get => _secSnapshotDiffs;
+            set => Set(ref _secSnapshotDiffs, value);
         }
 
         public string _selectedSnap0Name;
@@ -49,8 +32,6 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         }
 
         public string _selectedSnap1Name;
-        
-
         public string SelectedSnap1Name
         {
             get => _selectedSnap1Name;
@@ -65,7 +46,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         {
             var secList = await _dataService.GetMarketSecuritiesAsync();
             _snapService.CreateSnapshot(secList);
-            AvailSecSnapshots = _snapService.GetSnapshots();
+            OnPropertyChanged(nameof(AvailSecSnapshots));
         }
 
         public ICommand SelectedSnapChangedCommand { get; }
@@ -88,39 +69,18 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         private void OnDeleteSnapshotCommandExecuted(object p)
         {
             _snapService.DeleteSnapshot((AvailSecSnapshot)p);
-            AvailSecSnapshots = _snapService.GetSnapshots();
+            OnPropertyChanged(nameof(AvailSecSnapshots));
         }
 
         public AvailSecuritiesViewModel(IDataService dataService, ISnapshotService snapService)
         {
-            //AvailSecSnapshots = new List<AvailSecSnapshot>();
-            //for (int snapIndex = 0; snapIndex < 3; snapIndex++)
-            //{
-            //    var newSnapshot = new AvailSecSnapshot
-            //    {
-            //        CreatedDateTime = new DateTime(DateTime.Now.Ticks).AddDays(snapIndex),
-            //        Securities = new List<SecurityInfo>()
-            //    };
-            //    for (int i = 0; i < 10 + snapIndex; i++)
-            //    {
-            //        newSnapshot.Securities.Add(new SecurityInfo
-            //        {
-            //            Name = $"Security name {i}",
-            //            Ticker = $"Security ticker {i}",
-            //            InstrumentType = InstrumentType.Bond,
-            //            Currency = Currency.Rub
-            //        });
-            //    }
-            //    AvailSecSnapshots.Add(newSnapshot);
-            //}
-
             _snapService = snapService;
             _dataService = dataService;
             CreateSnapshotCommand = new RelayCommand(OnCreateSnapshotCommandExecuted, CanCreateSnapshotCommandExecute);
             SelectedSnapChangedCommand = new RelayCommand(OnSelectedSnapChangedCommandExecuted, CanSelectedSnapChangedCommandExecute);
             DeleteSnapshotCommand = new RelayCommand(OnDeleteSnapshotCommandExecuted, CanDeleteSnapshotCommandExecute);
             SelectedAvailSecSnapshots = new List<AvailSecSnapshot>();
-            AvailSecSnapshots = _snapService.GetSnapshots();
+            OnPropertyChanged(nameof(AvailSecSnapshots));
         }
 
         private List<SecSnapshotDiff> GetSecSnapshotDiffs(List<AvailSecSnapshot> snaps)
@@ -142,8 +102,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
                     {
                         Ticker = exclusiveSecurities[i][j].Ticker,
                         Name = exclusiveSecurities[i][j].Name,
-                        IsSnap0Contains = i == 0 ? true : false,
-                        IsSnap1Contains = i == 1 ? true : false
+                        IsSnap0Contains = i == 0,
+                        IsSnap1Contains = i == 1
                     });
                 }
             }

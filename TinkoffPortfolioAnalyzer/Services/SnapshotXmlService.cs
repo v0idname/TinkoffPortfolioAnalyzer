@@ -7,14 +7,14 @@ using TinkoffPortfolioAnalyzer.Models;
 
 namespace TinkoffPortfolioAnalyzer.Services
 {
-    internal class SnapshotService : ISnapshotService
+    internal class SnapshotXmlService : ISnapshotService
     {
         private const string SnapPath = "./Snapshots";
         private const string DateTimeFormat = "yyyy-MM-dd_HH-mm-ss";
-        private ObservableCollection<AvailSecSnapshot> _availSecSnapshots = new();
+        private readonly ObservableCollection<AvailSecSnapshot> _availSecSnapshots = new();
         XmlSerializer _xmlFormatter = new XmlSerializer(typeof(SecurityInfoList));
 
-        public SnapshotService()
+        public SnapshotXmlService()
         {
             Directory.CreateDirectory(SnapPath);
             var files = Directory.GetFiles(SnapPath, "*.xml");
@@ -55,9 +55,6 @@ namespace TinkoffPortfolioAnalyzer.Services
             File.Delete($"{SnapPath}/{snapshotToDelete.CreatedDateTime.ToString(DateTimeFormat)}.xml");
         }
 
-        public IEnumerable<AvailSecSnapshot> GetSnapshots()
-        {
-            return _availSecSnapshots;
-        }
+        public IEnumerable<AvailSecSnapshot> GetSnapshots() => _availSecSnapshots;
     }
 }

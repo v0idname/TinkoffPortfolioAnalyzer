@@ -21,26 +21,25 @@ namespace TinkoffPortfolioAnalyzer.Services
                 {
                     var fileLine = sr.ReadLine();
                     var fileLineArr = fileLine.Split(" ");
-                    if (fileLineArr[0] == TokenType.Trading.ToString())
+                    tinkTokens.Add(new TinkoffToken()
                     {
-                        tinkTokens.Add(new TinkoffToken()
-                        {
-                            Type = TokenType.Trading,
-                            Value = fileLineArr[1]
-                        });
-                    }
+                        Type = (TokenType)Enum.Parse(typeof(TokenType), fileLineArr[0]),
+                        Value = fileLineArr[1]
+                    });
                 }
             }
-            catch (ArgumentException)
-            {
-
-            }
-
+            catch (ArgumentException) { }
+            catch (FileNotFoundException) { }
             return tinkTokens;
         }
 
         public async Task<IEnumerable<TinkoffAccount>> GetAccountsAsync(TinkoffToken token)
         {
+            var accList = new List<TinkoffAccount>();
+
+            if (token == null)
+                return accList;
+
             switch (token.Type)
             {
                 case TokenType.Trading:
@@ -62,7 +61,6 @@ namespace TinkoffPortfolioAnalyzer.Services
                     throw new ArgumentException("Incorrect type of token", nameof(token));
             }
 
-            var accList = new List<TinkoffAccount>();
             var accs = await _curConnectContext.AccountsAsync().ConfigureAwait(false);
             foreach (var acc in accs)
                 accList.Add(new TinkoffAccount(acc));

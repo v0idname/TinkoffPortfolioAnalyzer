@@ -26,8 +26,8 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Menu>
-                    <MenuItem Header="Файл" Command="{Binding OpenTokensFileCommand}" 
-                              CommandParameter="-1">
+                    <MenuItem Header="Файл">
+                        <MenuItem Header="Выбрать файл с токенами" Command="{Binding OpenTokensFileCommand}"/>
                     </MenuItem>
                 </Menu>
             </Grid>

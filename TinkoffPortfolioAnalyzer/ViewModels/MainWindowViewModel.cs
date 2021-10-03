@@ -47,7 +47,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             set
             {
                 Set(ref _tinkoffTokens, value);
-                if (_tinkoffTokens.Count() > 0)
+                if (TinkoffTokens.Count() > 0)
                     CurrentTinkToken = TinkoffTokens.First();
             }
         }
@@ -60,7 +60,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             {
                 Set(ref _currentTinkoffToken, value);
                 AccountTypes = _dataService.GetAccountsAsync(CurrentTinkToken).GetAwaiter().GetResult();
-                CurrentAccountType = AccountTypes.First();
+                if (AccountTypes.Count() > 0)
+                    CurrentAccountType = AccountTypes.First();
             }
         }
         #endregion
@@ -95,7 +96,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             _dataService = dataService;
             PropertyChanged += MainWindowViewModel_PropertyChanged;
             OpenTokensFileCommand = new RelayCommand(OnOpenTokensFileCommandExecuted, CanOpenTokensFileCommandExecute);
-            TinkoffTokens = _dataService.GetTokens(Settings.Default.TokenFileName);
+            UpdateTokenList();
         }
 
         private async void MainWindowViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -104,6 +105,11 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             {
                 SecuritiesInfo = await _dataService.GetSecuritiesInfoAsync(_currentAccountType);
             }
+        }
+
+        private void UpdateTokenList()
+        {
+            TinkoffTokens = _dataService.GetTokens(Settings.Default.TokenFileName);
         }
 
         public ICommand OpenTokensFileCommand { get; }
@@ -119,6 +125,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
                 Settings.Default.TokenFileName = openFileDialog.FileName;
                 Settings.Default.Save();
             }
+            UpdateTokenList();
         }
     }
 }

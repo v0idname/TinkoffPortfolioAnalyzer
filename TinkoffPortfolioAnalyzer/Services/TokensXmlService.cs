@@ -7,7 +7,7 @@ namespace TinkoffPortfolioAnalyzer.Services
 {
     internal class TokensXmlService : ITokensService
     {
-        private ICollection<TinkoffToken> _tokens = new TinkoffTokensList().List;
+        private TinkoffTokensList _tokens = new();
         private const string TokensFileName = "./tokens.xml";
         XmlSerializer _xmlFormatter = new XmlSerializer(typeof(TinkoffTokensList));
 
@@ -21,20 +21,22 @@ namespace TinkoffPortfolioAnalyzer.Services
 
             using (var stream = File.OpenRead(TokensFileName))
             {
+                if (stream.Length == 0) return;
+
                 var tokensList = (TinkoffTokensList)_xmlFormatter.Deserialize(stream);
                 foreach (var token in tokensList.List)
                 {
-                    _tokens.Add(token);
+                    _tokens.List.Add(token);
                 }
             }
         }
 
         public void AddToken(TinkoffToken tokenToAdd)
         {
-            if (_tokens.Contains(tokenToAdd))
+            if (_tokens.List.Contains(tokenToAdd))
                 return;
 
-            _tokens.Add(tokenToAdd);
+            _tokens.List.Add(tokenToAdd);
             using (var stream = File.OpenWrite(TokensFileName))
             {
                 _xmlFormatter.Serialize(stream, _tokens);
@@ -43,13 +45,13 @@ namespace TinkoffPortfolioAnalyzer.Services
 
         public void DeleteToken(TinkoffToken tokenToDelete)
         {
-            _tokens.Remove(tokenToDelete);
+            _tokens.List.Remove(tokenToDelete);
             using (var stream = File.OpenWrite(TokensFileName))
             {
                 _xmlFormatter.Serialize(stream, _tokens);
             }
         }
 
-        public IEnumerable<TinkoffToken> GetTokens() => _tokens;
+        public IEnumerable<TinkoffToken> GetTokens() => _tokens.List;
     }
 }

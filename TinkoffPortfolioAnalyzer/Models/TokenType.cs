@@ -1,6 +1,6 @@
 ﻿namespace TinkoffPortfolioAnalyzer.Models
 {
-    enum TokenType
+    public enum TokenType
     {
         Trading,
         Sandbox

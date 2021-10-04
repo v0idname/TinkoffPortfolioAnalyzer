@@ -92,7 +92,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         {
             _dataService = dataService;
             PropertyChanged += MainWindowViewModel_PropertyChanged;
-            OpenTokensFileCommand = new RelayCommand(OnOpenTokensFileCommandExecuted, CanOpenTokensFileCommandExecute);
+            OpenTokensWindowCommand = new RelayCommand(OnOpenTokensWindowCommandExecuted, CanOpenTokensWindowCommandExecute);
             UpdateTokenList();
         }
 
@@ -115,12 +115,14 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             TinkoffTokens = _dataService.GetTokens(Settings.Default.TokenFileName);
         }
 
-        public ICommand OpenTokensFileCommand { get; }
+        public ICommand OpenTokensWindowCommand { get; }
 
-        private bool CanOpenTokensFileCommandExecute(object o) => true;
+        private bool CanOpenTokensWindowCommandExecute(object o) => true;
 
-        private void OnOpenTokensFileCommandExecuted(object o)
+        private void OnOpenTokensWindowCommandExecuted(object o)
         {
+
+
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
             if (openFileDialog.ShowDialog() == true)

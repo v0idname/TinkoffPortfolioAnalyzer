@@ -5,10 +5,10 @@ using System.Collections.ObjectModel;
 namespace TinkoffPortfolioAnalyzer.Models
 {
     [Serializable]
-    internal class TinkoffTokensList
+    public class TinkoffTokensList
     {
         private ObservableCollection<TinkoffToken> _list = new();
 
-        public ICollection<TinkoffToken> List => _list;
+        public ObservableCollection<TinkoffToken> List => _list;
     }
 }

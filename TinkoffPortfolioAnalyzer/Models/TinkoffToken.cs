@@ -3,7 +3,7 @@
 namespace TinkoffPortfolioAnalyzer.Models
 {
     [Serializable]
-    class TinkoffToken
+    public class TinkoffToken
     {
         public TokenType Type { get; set; }
         public string Value { get; set; }

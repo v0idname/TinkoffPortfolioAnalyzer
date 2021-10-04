@@ -1,5 +1,8 @@
-﻿namespace TinkoffPortfolioAnalyzer.Models
+﻿using System;
+
+namespace TinkoffPortfolioAnalyzer.Models
 {
+    [Serializable]
     class TinkoffToken
     {
         public TokenType Type { get; set; }

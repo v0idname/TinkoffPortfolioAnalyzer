@@ -35,8 +35,10 @@ namespace TinkoffPortfolioAnalyzer
         {
             services.AddSingleton<IDataService, DataService>();
             services.AddSingleton<ISnapshotService, SnapshotXmlService>();
+            services.AddSingleton<ITokensService, TokensXmlService>();
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<AvailSecuritiesViewModel>();
+            services.AddSingleton<TokensManagementViewModel>();
         }
     }
 }

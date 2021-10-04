@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
 using Tinkoff.Trading.OpenApi.Models;
 using Tinkoff.Trading.OpenApi.Network;
@@ -11,27 +10,6 @@ namespace TinkoffPortfolioAnalyzer.Services
     internal class DataService : IDataService
     {
         private Context _curConnectContext;
-
-        public IEnumerable<TinkoffToken> GetTokens(string fileName)
-        {
-            var tinkTokens = new List<TinkoffToken>();
-            try
-            {
-                using (var sr = new StreamReader(fileName))
-                {
-                    var fileLine = sr.ReadLine();
-                    var fileLineArr = fileLine.Split(" ");
-                    tinkTokens.Add(new TinkoffToken()
-                    {
-                        Type = (TokenType)Enum.Parse(typeof(TokenType), fileLineArr[0]),
-                        Value = fileLineArr[1]
-                    });
-                }
-            }
-            catch (ArgumentException) { }
-            catch (FileNotFoundException) { }
-            return tinkTokens;
-        }
 
         public async Task<IEnumerable<TinkoffAccount>> GetAccountsAsync(TinkoffToken token)
         {

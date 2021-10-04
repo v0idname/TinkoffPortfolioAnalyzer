@@ -9,7 +9,6 @@ namespace TinkoffPortfolioAnalyzer.Services
     {
         Task<IEnumerable<TinkoffAccount>> GetAccountsAsync(TinkoffToken token);
         Task<IEnumerable<PortfolioSecurityInfo>> GetSecuritiesInfoAsync(Account acc);
-        IEnumerable<TinkoffToken> GetTokens(string fileName);
         Task<SecurityInfoList> GetMarketSecuritiesAsync();
     }
 }

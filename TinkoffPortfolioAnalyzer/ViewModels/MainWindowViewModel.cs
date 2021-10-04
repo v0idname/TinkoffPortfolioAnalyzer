@@ -1,20 +1,16 @@
-﻿using Library.Commands;
-using Microsoft.Win32;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
 using System.Windows.Data;
-using System.Windows.Input;
 using TinkoffPortfolioAnalyzer.Models;
-using TinkoffPortfolioAnalyzer.Properties;
 using TinkoffPortfolioAnalyzer.Services;
 
 namespace TinkoffPortfolioAnalyzer.ViewModels
 {
     class MainWindowViewModel : Library.ViewModels.BaseViewModel
     {
-        private IDataService _dataService;
+        private readonly IDataService _dataService;
+        private readonly ITokensService _tokensService;
 
         #region SecuritiesInfo
         private IEnumerable<PortfolioSecurityInfo> _securitiesInfo;
@@ -47,7 +43,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             set
             {
                 Set(ref _tinkoffTokens, value);
-                if (TinkoffTokens.Count() > 0)
+                if (TinkoffTokens.Any())
                     CurrentTinkToken = TinkoffTokens.First();
             }
         }
@@ -56,10 +52,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         public TinkoffToken CurrentTinkToken
         {
             get => _currentTinkoffToken;
-            set
-            {
-                Set(ref _currentTinkoffToken, value);
-            }
+            set => Set(ref _currentTinkoffToken, value);
         }
         #endregion
 
@@ -79,20 +72,17 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         public TinkoffAccount CurrentAccountType
         {
             get => _currentAccountType;
-            set
-            {
-                Set(ref _currentAccountType, value);
-            }
+            set => Set(ref _currentAccountType, value);
         }
         #endregion
 
         public CollectionViewSource SecuritiesViewSource { get; } = new CollectionViewSource();
 
-        public MainWindowViewModel(IDataService dataService)
+        public MainWindowViewModel(IDataService dataService, ITokensService tokensService)
         {
             _dataService = dataService;
+            _tokensService = tokensService;
             PropertyChanged += MainWindowViewModel_PropertyChanged;
-            OpenTokensWindowCommand = new RelayCommand(OnOpenTokensWindowCommandExecuted, CanOpenTokensWindowCommandExecute);
             UpdateTokenList();
         }
 
@@ -112,25 +102,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private void UpdateTokenList()
         {
-            TinkoffTokens = _dataService.GetTokens(Settings.Default.TokenFileName);
-        }
-
-        public ICommand OpenTokensWindowCommand { get; }
-
-        private bool CanOpenTokensWindowCommandExecute(object o) => true;
-
-        private void OnOpenTokensWindowCommandExecuted(object o)
-        {
-
-
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = Directory.GetCurrentDirectory();
-            if (openFileDialog.ShowDialog() == true)
-            {
-                Settings.Default.TokenFileName = openFileDialog.FileName;
-                Settings.Default.Save();
-            }
-            UpdateTokenList();
+            TinkoffTokens = _tokensService.GetTokens();
         }
     }
 }

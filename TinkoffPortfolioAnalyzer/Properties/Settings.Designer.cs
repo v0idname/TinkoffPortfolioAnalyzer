@@ -22,17 +22,5 @@ namespace TinkoffPortfolioAnalyzer.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string TokenFileName {
-            get {
-                return ((string)(this["TokenFileName"]));
-            }
-            set {
-                this["TokenFileName"] = value;
-            }
-        }
     }
 }

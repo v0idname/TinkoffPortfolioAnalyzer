@@ -35,6 +35,20 @@
                     Command="{Binding AddTokenCommand}"/>
         </Grid>
         <ListBox DockPanel.Dock="Bottom"
-                 ItemsSource="{Binding Tokens}"/>
+                 ItemsSource="{Binding Tokens}"
+                 x:Name="TokensListBox">
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="TinkoffToken">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Style="{StaticResource DeleteButtonStyle}"
+                                Command="{Binding ElementName=TokensListBox, 
+                                    Path=DataContext.DeleteTokenCommand}"
+                                        CommandParameter="{Binding }"/>
+                        <TextBlock VerticalAlignment="Center" Margin="3,0,0,0"
+                                   Text="{Binding}"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
     </DockPanel>
 </Window>

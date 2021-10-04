@@ -40,10 +40,20 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             });
         }
 
+        public ICommand DeleteTokenCommand { get; set; }
+
+        private bool CanDeleteTokenCommandExecute(object parameter) => parameter is TinkoffToken;
+
+        private void OnDeleteTokenCommandExecuted(object parameter)
+        {
+            _tokensService.DeleteToken((TinkoffToken)parameter);
+        }
+
         public TokensManagementViewModel(ITokensService tokensService)
         {
             _tokensService = tokensService;
             AddTokenCommand = new RelayCommand(OnAddTokenCommandExecuted, CanAddTokenCommandExecute);
+            DeleteTokenCommand = new RelayCommand(OnDeleteTokenCommandExecuted, CanDeleteTokenCommandExecute);
         }
     }
 }

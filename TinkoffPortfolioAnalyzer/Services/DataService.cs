@@ -47,6 +47,9 @@ namespace TinkoffPortfolioAnalyzer.Services
 
         public async Task<IEnumerable<PortfolioSecurityInfo>> GetSecuritiesInfoAsync(Account acc)
         {
+            if (acc == null)
+                return new List<PortfolioSecurityInfo>();
+
             var portfolio = await _curConnectContext.PortfolioAsync(acc.BrokerAccountId).ConfigureAwait(false);
             var itemsList = new List<PortfolioSecurityInfo>(portfolio.Positions.Count);
             foreach (var item in portfolio.Positions)

@@ -88,11 +88,11 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private async void MainWindowViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(CurrentAccountType) && CurrentAccountType != null)
+            if (e.PropertyName == nameof(CurrentAccountType))
             {
                 SecuritiesInfo = await _dataService.GetSecuritiesInfoAsync(CurrentAccountType);
             }
-            else if (e.PropertyName == nameof(CurrentTinkToken) && CurrentTinkToken != null)
+            else if (e.PropertyName == nameof(CurrentTinkToken))
             {
                 AccountTypes = await _dataService.GetAccountsAsync(CurrentTinkToken);
                 if (AccountTypes.Count() > 0)

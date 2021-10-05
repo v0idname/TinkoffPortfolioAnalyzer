@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using TinkoffPortfolioAnalyzer.Models;
@@ -23,10 +24,17 @@ namespace TinkoffPortfolioAnalyzer.Services
             {
                 if (stream.Length == 0) return;
 
-                var tokensList = (TinkoffTokensList)_xmlFormatter.Deserialize(stream);
-                foreach (var token in tokensList.List)
+                try
                 {
-                    _tokens.List.Add(token);
+                    var tokensList = (TinkoffTokensList)_xmlFormatter.Deserialize(stream);
+                    foreach (var token in tokensList.List)
+                    {
+                        _tokens.List.Add(token);
+                    }
+                } 
+                catch (InvalidOperationException)
+                {
+                    // Ошибка при чтении xml файла с токенами
                 }
             }
         }
@@ -37,6 +45,7 @@ namespace TinkoffPortfolioAnalyzer.Services
                 return;
 
             _tokens.List.Add(tokenToAdd);
+            File.WriteAllText(TokensFileName, string.Empty);
             using (var stream = File.OpenWrite(TokensFileName))
             {
                 _xmlFormatter.Serialize(stream, _tokens);

@@ -7,9 +7,10 @@
         xmlns:local="clr-namespace:TinkoffPortfolioAnalyzer.Views.Windows"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="Управление токенами" Height="300" Width="400"
+        Title="Управление токенами" Height="300" Width="600"
         Icon="../../Resources/tinkofficon.ico"
-        DataContext="{Binding TokensManagementViewModel, Source={StaticResource Locator}}">
+        DataContext="{Binding TokensManagementViewModel, Source={StaticResource Locator}}"
+        WindowStartupLocation="CenterOwner">
     <Window.Resources>
         <ObjectDataProvider x:Key="TokenTypeEnum" MethodName="GetValues" 
                             ObjectType="{x:Type sys:Enum}">

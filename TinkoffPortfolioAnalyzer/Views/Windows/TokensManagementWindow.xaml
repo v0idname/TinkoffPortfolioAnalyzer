@@ -19,36 +19,39 @@
         </ObjectDataProvider>
     </Window.Resources>
     <DockPanel>
-        <Grid DockPanel.Dock="Top" Margin="2,2,2,2">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="100"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="100"/>
-            </Grid.ColumnDefinitions>
-            <ComboBox Grid.Column="0"
-                      ItemsSource="{Binding Source={StaticResource TokenTypeEnum}}"
-                      SelectedItem="{Binding SelectedTokenType}"/>
-            <TextBox Margin="2,0,2,0" Grid.Column="1"
-                     Text="{Binding EnteredTokenString}"/>
-            <Button Grid.Column="2" Content="Добавить токен"
-                    HorizontalAlignment="Right" Width="100"
-                    Command="{Binding AddTokenCommand}"/>
-        </Grid>
-        <ListBox DockPanel.Dock="Bottom"
-                 ItemsSource="{Binding Tokens}"
-                 x:Name="TokensListBox">
-            <ListBox.ItemTemplate>
-                <DataTemplate DataType="TinkoffToken">
-                    <StackPanel Orientation="Horizontal">
-                        <Button Style="{StaticResource DeleteButtonStyle}"
-                                Command="{Binding ElementName=TokensListBox, 
-                                    Path=DataContext.DeleteTokenCommand}"
-                                        CommandParameter="{Binding }"/>
-                        <TextBlock VerticalAlignment="Center" Margin="3,0,0,0"
-                                   Text="{Binding}"/>
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <GroupBox DockPanel.Dock="Top" Header="Добавление токена">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="100"/>
+                </Grid.ColumnDefinitions>
+                <ComboBox Grid.Column="0"
+                          ItemsSource="{Binding Source={StaticResource TokenTypeEnum}}"
+                          SelectedItem="{Binding SelectedTokenType}"/>
+                <TextBox Margin="2,0,2,0" Grid.Column="1"
+                         Text="{Binding EnteredTokenString}"/>
+                <Button Grid.Column="2" Content="Добавить токен"
+                        HorizontalAlignment="Right" Width="100"
+                        Command="{Binding AddTokenCommand}"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox DockPanel.Dock="Bottom" Header="Доступные токены">
+            <ListBox ItemsSource="{Binding Tokens}"
+                     x:Name="TokensListBox">
+                <ListBox.ItemTemplate>
+                    <DataTemplate DataType="TinkoffToken">
+                        <StackPanel Orientation="Horizontal">
+                            <Button Style="{StaticResource DeleteButtonStyle}"
+                                    Command="{Binding ElementName=TokensListBox, 
+                                        Path=DataContext.DeleteTokenCommand}"
+                                            CommandParameter="{Binding }"/>
+                            <TextBlock VerticalAlignment="Center" Margin="3,0,0,0"
+                                       Text="{Binding}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </GroupBox>
     </DockPanel>
 </Window>

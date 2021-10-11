@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using Tinkoff.Trading.OpenApi.Models;
 
 namespace TinkoffPortfolioAnalyzer.Models
@@ -7,7 +8,10 @@ namespace TinkoffPortfolioAnalyzer.Models
     public class SecurityInfo : IEquatable<SecurityInfo>
     {
         public string Name { get; set; }
+
+        [Key]
         public string Ticker { get; set; }
+
         public InstrumentType InstrumentType { get; set; }
         
         public Currency Currency { get; set; }

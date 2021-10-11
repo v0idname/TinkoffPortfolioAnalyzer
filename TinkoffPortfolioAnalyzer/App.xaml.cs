@@ -22,8 +22,7 @@ namespace TinkoffPortfolioAnalyzer
             var host = Host;
 
             using var scopedServices = host.Services.CreateScope();
-            var dbInit = new DbInitializer(scopedServices.ServiceProvider.GetRequiredService<PortfolioAnalyzerDb>());
-            await dbInit.InitAsync();
+            await scopedServices.ServiceProvider.GetRequiredService<DbInitializer>().InitAsync();
             
             base.OnStartup(e);
             await host.StartAsync().ConfigureAwait(false);
@@ -46,6 +45,7 @@ namespace TinkoffPortfolioAnalyzer
             services.AddSingleton<AvailSecuritiesViewModel>();
             services.AddSingleton<TokensManagementViewModel>();
             services.AddDatabase(host.Configuration.GetSection("Database"));
+            services.AddTransient<DbInitializer>();
         }
     }
 }

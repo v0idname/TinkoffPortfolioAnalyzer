@@ -9,8 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="sandbox token.txt" />
     <None Remove="tinkoff icon.png" />
     <None Remove="tokens.txt" />
+    <None Remove="tradding token.txt" />
   </ItemGroup>
 
   <ItemGroup>

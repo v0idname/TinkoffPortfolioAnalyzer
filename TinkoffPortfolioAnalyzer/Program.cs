@@ -4,6 +4,7 @@ using System;
 
 namespace TinkoffPortfolioAnalyzer
 {
+
     public static class Program
     {
         [STAThread]

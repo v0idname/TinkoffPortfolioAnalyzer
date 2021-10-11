@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Windows;
+using TinkoffPortfolioAnalyzer.Data;
 using TinkoffPortfolioAnalyzer.Services;
 using TinkoffPortfolioAnalyzer.ViewModels;
 
@@ -39,6 +40,7 @@ namespace TinkoffPortfolioAnalyzer
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<AvailSecuritiesViewModel>();
             services.AddSingleton<TokensManagementViewModel>();
+            services.AddDatabase(host.Configuration.GetSection("Database"));
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 using TinkoffPortfolioAnalyzer.Models;
 
@@ -39,26 +40,28 @@ namespace TinkoffPortfolioAnalyzer.Data
             }
         }
 
-        public void Add(TinkoffToken tokenToAdd)
+        public async Task AddAsync(TinkoffToken tokenToAdd)
         {
             if (_tokens.List.Contains(tokenToAdd))
                 return;
 
-            _tokens.List.Add(tokenToAdd);
-            File.WriteAllText(TokensFileName, string.Empty);
-            using (var stream = File.OpenWrite(TokensFileName))
+            await Task.Run(() =>
             {
+                _tokens.List.Add(tokenToAdd);
+                File.WriteAllText(TokensFileName, string.Empty);
+                using var stream = File.OpenWrite(TokensFileName);
                 _xmlFormatter.Serialize(stream, _tokens);
-            }
+            });
         }
 
-        public void Remove(TinkoffToken tokenToDelete)
+        public async Task RemoveAsync(TinkoffToken tokenToDelete)
         {
-            _tokens.List.Remove(tokenToDelete);
-            using (var stream = File.OpenWrite(TokensFileName))
+            await Task.Run(() =>
             {
+                _tokens.List.Remove(tokenToDelete);
+                using var stream = File.OpenWrite(TokensFileName);
                 _xmlFormatter.Serialize(stream, _tokens);
-            }
+            });
         }
 
         public IEnumerable<TinkoffToken> GetAll() => _tokens.List;

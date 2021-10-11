@@ -33,7 +33,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private void OnAddTokenCommandExecuted(object parameter)
         {
-            _tokensService.Add(new TinkoffToken()
+            _tokensService.AddAsync(new TinkoffToken()
             {
                 Type = SelectedTokenType,
                 Value = EnteredTokenString
@@ -46,7 +46,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private void OnDeleteTokenCommandExecuted(object parameter)
         {
-            _tokensService.Remove((TinkoffToken)parameter);
+            _tokensService.RemoveAsync((TinkoffToken)parameter);
         }
 
         public TokensManagementViewModel(ITokensRepository tokensService)

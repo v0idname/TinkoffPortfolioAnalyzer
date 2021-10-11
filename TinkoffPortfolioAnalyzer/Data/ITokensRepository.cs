@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TinkoffPortfolioAnalyzer.Models;
 
 namespace TinkoffPortfolioAnalyzer.Data
@@ -7,8 +8,8 @@ namespace TinkoffPortfolioAnalyzer.Data
     {
         IEnumerable<TinkoffToken> GetAll();
 
-        void Remove(TinkoffToken tokenToDelete);
+        Task RemoveAsync(TinkoffToken tokenToDelete);
 
-        void Add(TinkoffToken tokenToAdd);
+        Task AddAsync(TinkoffToken tokenToAdd);
     }
 }

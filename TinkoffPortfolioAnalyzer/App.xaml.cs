@@ -21,9 +21,9 @@ namespace TinkoffPortfolioAnalyzer
         {
             var host = Host;
 
-            using var scopedServices = host.Services.CreateScope();
-            await scopedServices.ServiceProvider.GetRequiredService<DbInitializer>().InitAsync();
-            
+            //using var scopedServices = host.Services.CreateScope();
+            //await scopedServices.ServiceProvider.GetRequiredService<DbInitializer>().InitAsync();
+
             base.OnStartup(e);
             await host.StartAsync().ConfigureAwait(false);
         }
@@ -40,12 +40,13 @@ namespace TinkoffPortfolioAnalyzer
         {
             services.AddSingleton<IDataService, DataService>();
             services.AddSingleton<ISnapshotService, SnapshotXmlService>();
-            services.AddSingleton<ITokensRepository, TokensXmlRepository>();
+            //services.AddSingleton<ITokensRepository, TokensXmlRepository>();
+            services.AddSingleton<ITokensRepository, TokensDbRepository>();
             services.AddSingleton<MainWindowViewModel>();
             services.AddSingleton<AvailSecuritiesViewModel>();
             services.AddSingleton<TokensManagementViewModel>();
             services.AddDatabase(host.Configuration.GetSection("Database"));
-            services.AddTransient<DbInitializer>();
+            //services.AddTransient<DbInitializer>();
         }
     }
 }

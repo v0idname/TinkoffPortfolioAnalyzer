@@ -19,10 +19,10 @@ namespace TinkoffPortfolioAnalyzer.Data
 
         public async Task InitAsync()
         {
-            await _db.Database.EnsureDeletedAsync();
+            //await _db.Database.EnsureDeletedAsync();
             await _db.Database.MigrateAsync();
-            await InitTokensAsync();
-            await InitSnapshotsAsync();
+            //await InitTokensAsync();
+            //await InitSnapshotsAsync();
             await _db.SaveChangesAsync();
         }
 

@@ -13,6 +13,8 @@ namespace TinkoffPortfolioAnalyzer.Data
         private const string TokensFileName = "./tokens.xml";
         XmlSerializer _xmlFormatter = new XmlSerializer(typeof(TinkoffTokensList));
 
+        public event EventHandler RepositoryChanged;
+
         public TokensXmlRepository()
         {
             if (!File.Exists(TokensFileName))
@@ -45,25 +47,27 @@ namespace TinkoffPortfolioAnalyzer.Data
             if (_tokens.List.Contains(tokenToAdd))
                 return;
 
+            _tokens.List.Add(tokenToAdd);
             await Task.Run(() =>
             {
-                _tokens.List.Add(tokenToAdd);
                 File.WriteAllText(TokensFileName, string.Empty);
                 using var stream = File.OpenWrite(TokensFileName);
                 _xmlFormatter.Serialize(stream, _tokens);
             });
+            RepositoryChanged?.Invoke(this, new EventArgs());
         }
 
         public async Task RemoveAsync(TinkoffToken tokenToDelete)
         {
+            _tokens.List.Remove(tokenToDelete);
             await Task.Run(() =>
             {
-                _tokens.List.Remove(tokenToDelete);
                 using var stream = File.OpenWrite(TokensFileName);
                 _xmlFormatter.Serialize(stream, _tokens);
             });
+            RepositoryChanged?.Invoke(this, new EventArgs());
         }
 
-        public IEnumerable<TinkoffToken> GetAll() => _tokens.List;
+        public async Task<IEnumerable<TinkoffToken>> GetAllAsync() => _tokens.List;
     }
 }

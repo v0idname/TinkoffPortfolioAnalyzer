@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Data;
 using TinkoffPortfolioAnalyzer.Data;
 using TinkoffPortfolioAnalyzer.Models;
@@ -83,8 +84,14 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         {
             _dataService = dataService;
             _tokensService = tokensService;
+            _tokensService.RepositoryChanged += _tokensService_RepositoryChanged;
             PropertyChanged += MainWindowViewModel_PropertyChanged;
-            UpdateTokenList();
+            UpdateTokenListAsync();
+        }
+
+        private async void _tokensService_RepositoryChanged(object sender, System.EventArgs e)
+        {
+            await UpdateTokenListAsync();
         }
 
         private async void MainWindowViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -101,9 +108,9 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             }
         }
 
-        private void UpdateTokenList()
+        private async Task UpdateTokenListAsync()
         {
-            TinkoffTokens = _tokensService.GetAll();
+            TinkoffTokens = await _tokensService.GetAllAsync();
         }
     }
 }

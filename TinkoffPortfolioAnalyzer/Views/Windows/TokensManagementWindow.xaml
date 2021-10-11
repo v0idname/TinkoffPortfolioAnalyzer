@@ -6,6 +6,7 @@
         xmlns:m="clr-namespace:TinkoffPortfolioAnalyzer.Models"
         xmlns:local="clr-namespace:TinkoffPortfolioAnalyzer.Views.Windows"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        xmlns:bhv="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
         Title="Управление токенами" Height="300" Width="600"
         Icon="../../Resources/tinkofficon.ico"
@@ -19,6 +20,11 @@
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </Window.Resources>
+    <bhv:Interaction.Triggers>
+        <bhv:EventTrigger EventName="Loaded">
+            <bhv:InvokeCommandAction Command="{Binding LoadedCommand}"/>
+        </bhv:EventTrigger>
+    </bhv:Interaction.Triggers>
     <DockPanel>
         <GroupBox DockPanel.Dock="Top" Header="Добавление токена">
             <Grid>

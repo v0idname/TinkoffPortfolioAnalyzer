@@ -1,6 +1,7 @@
 ﻿using Library.Commands;
 using Library.ViewModels;
-using System.Collections.Generic;
+using System;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 using TinkoffPortfolioAnalyzer.Data;
 using TinkoffPortfolioAnalyzer.Models;
@@ -11,7 +12,14 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
     {
         private readonly ITokensRepository _tokensService;
 
-        public IEnumerable<TinkoffToken> Tokens => _tokensService.GetAll();
+        public event EventHandler WindowClosed;
+
+        ObservableCollection<TinkoffToken> _tokens;
+        public ObservableCollection<TinkoffToken> Tokens
+        {
+            get => _tokens;
+            set => Set(ref _tokens, value);
+        }
 
         private TokenType _selectedTokenType;
         public TokenType SelectedTokenType 
@@ -31,22 +39,35 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private bool CanAddTokenCommandExecute(object parameter) => true;
 
-        private void OnAddTokenCommandExecuted(object parameter)
+        private async void OnAddTokenCommandExecuted(object parameter)
         {
-            _tokensService.AddAsync(new TinkoffToken()
+            var newToken = new TinkoffToken()
             {
                 Type = SelectedTokenType,
                 Value = EnteredTokenString
-            });
+            };
+            await _tokensService.AddAsync(newToken);
+            Tokens.Add(newToken);
         }
 
         public ICommand DeleteTokenCommand { get; set; }
 
         private bool CanDeleteTokenCommandExecute(object parameter) => parameter is TinkoffToken;
 
-        private void OnDeleteTokenCommandExecuted(object parameter)
+        private async void OnDeleteTokenCommandExecuted(object parameter)
         {
-            _tokensService.RemoveAsync((TinkoffToken)parameter);
+            var delToken = (TinkoffToken)parameter;
+            await _tokensService.RemoveAsync(delToken);
+            Tokens.Remove(delToken);
+        }
+
+        public ICommand LoadedCommand { get; set; }
+
+        private bool CanLoadedCommandExecute(object parameter) => true;
+
+        private async void OnLoadedCommandExecuted(object parameter)
+        {
+            Tokens = new ObservableCollection<TinkoffToken>(await _tokensService.GetAllAsync().ConfigureAwait(false));
         }
 
         public TokensManagementViewModel(ITokensRepository tokensService)
@@ -54,6 +75,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             _tokensService = tokensService;
             AddTokenCommand = new RelayCommand(OnAddTokenCommandExecuted, CanAddTokenCommandExecute);
             DeleteTokenCommand = new RelayCommand(OnDeleteTokenCommandExecuted, CanDeleteTokenCommandExecute);
+            LoadedCommand = new RelayCommand(OnLoadedCommandExecuted, CanLoadedCommandExecute);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TinkoffPortfolioAnalyzer.Models;
 
@@ -6,10 +7,12 @@ namespace TinkoffPortfolioAnalyzer.Data
 {
     internal interface ITokensRepository
     {
-        IEnumerable<TinkoffToken> GetAll();
+        Task<IEnumerable<TinkoffToken>> GetAllAsync();
 
         Task RemoveAsync(TinkoffToken tokenToDelete);
 
         Task AddAsync(TinkoffToken tokenToAdd);
+
+        event EventHandler RepositoryChanged;
     }
 }

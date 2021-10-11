@@ -4,15 +4,15 @@ using System.IO;
 using System.Xml.Serialization;
 using TinkoffPortfolioAnalyzer.Models;
 
-namespace TinkoffPortfolioAnalyzer.Services
+namespace TinkoffPortfolioAnalyzer.Data
 {
-    internal class TokensXmlService : ITokensService
+    internal class TokensXmlRepository : ITokensRepository
     {
         private TinkoffTokensList _tokens = new();
         private const string TokensFileName = "./tokens.xml";
         XmlSerializer _xmlFormatter = new XmlSerializer(typeof(TinkoffTokensList));
 
-        public TokensXmlService()
+        public TokensXmlRepository()
         {
             if (!File.Exists(TokensFileName))
             {
@@ -31,7 +31,7 @@ namespace TinkoffPortfolioAnalyzer.Services
                     {
                         _tokens.List.Add(token);
                     }
-                } 
+                }
                 catch (InvalidOperationException)
                 {
                     // Ошибка при чтении xml файла с токенами
@@ -39,7 +39,7 @@ namespace TinkoffPortfolioAnalyzer.Services
             }
         }
 
-        public void AddToken(TinkoffToken tokenToAdd)
+        public void Add(TinkoffToken tokenToAdd)
         {
             if (_tokens.List.Contains(tokenToAdd))
                 return;
@@ -52,7 +52,7 @@ namespace TinkoffPortfolioAnalyzer.Services
             }
         }
 
-        public void DeleteToken(TinkoffToken tokenToDelete)
+        public void Remove(TinkoffToken tokenToDelete)
         {
             _tokens.List.Remove(tokenToDelete);
             using (var stream = File.OpenWrite(TokensFileName))
@@ -61,6 +61,6 @@ namespace TinkoffPortfolioAnalyzer.Services
             }
         }
 
-        public IEnumerable<TinkoffToken> GetTokens() => _tokens.List;
+        public IEnumerable<TinkoffToken> GetAll() => _tokens.List;
     }
 }

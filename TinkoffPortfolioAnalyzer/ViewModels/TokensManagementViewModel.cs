@@ -2,16 +2,16 @@
 using Library.ViewModels;
 using System.Collections.Generic;
 using System.Windows.Input;
+using TinkoffPortfolioAnalyzer.Data;
 using TinkoffPortfolioAnalyzer.Models;
-using TinkoffPortfolioAnalyzer.Services;
 
 namespace TinkoffPortfolioAnalyzer.ViewModels
 {
     internal class TokensManagementViewModel : BaseViewModel
     {
-        private readonly ITokensService _tokensService;
+        private readonly ITokensRepository _tokensService;
 
-        public IEnumerable<TinkoffToken> Tokens => _tokensService.GetTokens();
+        public IEnumerable<TinkoffToken> Tokens => _tokensService.GetAll();
 
         private TokenType _selectedTokenType;
         public TokenType SelectedTokenType 
@@ -33,7 +33,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private void OnAddTokenCommandExecuted(object parameter)
         {
-            _tokensService.AddToken(new TinkoffToken()
+            _tokensService.Add(new TinkoffToken()
             {
                 Type = SelectedTokenType,
                 Value = EnteredTokenString
@@ -46,10 +46,10 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private void OnDeleteTokenCommandExecuted(object parameter)
         {
-            _tokensService.DeleteToken((TinkoffToken)parameter);
+            _tokensService.Remove((TinkoffToken)parameter);
         }
 
-        public TokensManagementViewModel(ITokensService tokensService)
+        public TokensManagementViewModel(ITokensRepository tokensService)
         {
             _tokensService = tokensService;
             AddTokenCommand = new RelayCommand(OnAddTokenCommandExecuted, CanAddTokenCommandExecute);

@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Data;
+using TinkoffPortfolioAnalyzer.Data;
 using TinkoffPortfolioAnalyzer.Models;
 using TinkoffPortfolioAnalyzer.Services;
 
@@ -10,7 +11,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
     class MainWindowViewModel : Library.ViewModels.BaseViewModel
     {
         private readonly IDataService _dataService;
-        private readonly ITokensService _tokensService;
+        private readonly ITokensRepository _tokensService;
 
         #region SecuritiesInfo
         private IEnumerable<PortfolioSecurityInfo> _securitiesInfo;
@@ -78,7 +79,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         public CollectionViewSource SecuritiesViewSource { get; } = new CollectionViewSource();
 
-        public MainWindowViewModel(IDataService dataService, ITokensService tokensService)
+        public MainWindowViewModel(IDataService dataService, ITokensRepository tokensService)
         {
             _dataService = dataService;
             _tokensService = tokensService;
@@ -102,7 +103,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private void UpdateTokenList()
         {
-            TinkoffTokens = _tokensService.GetTokens();
+            TinkoffTokens = _tokensService.GetAll();
         }
     }
 }

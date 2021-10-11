@@ -1,15 +1,14 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using Library.Data;
+using System;
 using Tinkoff.Trading.OpenApi.Models;
 
 namespace TinkoffPortfolioAnalyzer.Models
 {
     [Serializable]
-    public class SecurityInfo : IEquatable<SecurityInfo>
+    public class SecurityInfo : Entity, IEquatable<SecurityInfo>
     {
         public string Name { get; set; }
 
-        [Key]
         public string Ticker { get; set; }
 
         public InstrumentType InstrumentType { get; set; }

@@ -29,7 +29,7 @@ namespace TinkoffPortfolioAnalyzer.Data
         private async Task InitTokensAsync()
         {
             Random rnd = new Random();
-            var tokens = Enumerable.Range(0, 100).Select(t => new TokenEntity()
+            var tokens = Enumerable.Range(0, 100).Select(t => new TinkoffToken()
             {
                 Type = rnd.NextEnumItem<TokenType>(),
                 Value = Guid.NewGuid().ToString()
@@ -48,7 +48,7 @@ namespace TinkoffPortfolioAnalyzer.Data
                 Ticker = $"{Guid.NewGuid()}"
             });
 
-            var snapshots = Enumerable.Range(0, 100).Select(t => new SnapshotEntity()
+            var snapshots = Enumerable.Range(0, 100).Select(t => new AvailSecSnapshot()
             {
                 CreatedDateTime = DateTime.Now,
                 Securities = securities.ToArray()

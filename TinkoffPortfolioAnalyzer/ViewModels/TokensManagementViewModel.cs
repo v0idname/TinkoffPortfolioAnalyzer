@@ -12,8 +12,6 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
     {
         private readonly ITokensRepository _tokensService;
 
-        public event EventHandler WindowClosed;
-
         ObservableCollection<TinkoffToken> _tokens;
         public ObservableCollection<TinkoffToken> Tokens
         {

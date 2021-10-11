@@ -38,14 +38,14 @@ namespace TinkoffPortfolioAnalyzer
 
         public static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
         {
-            services.AddSingleton<IDataService, DataService>();
-            services.AddSingleton<ISnapshotService, SnapshotXmlService>();
-            //services.AddSingleton<ITokensRepository, TokensXmlRepository>();
-            services.AddSingleton<ITokensRepository, TokensDbRepository>();
-            services.AddSingleton<MainWindowViewModel>();
-            services.AddSingleton<AvailSecuritiesViewModel>();
-            services.AddSingleton<TokensManagementViewModel>();
             services.AddDatabase(host.Configuration.GetSection("Database"));
+            services.AddTransient<IDataService, DataService>();
+            services.AddTransient<ISnapshotService, SnapshotXmlService>();
+            //services.AddTransient<ITokensRepository, TokensXmlRepository>();
+            services.AddTransient<ITokensRepository, TokensDbRepository>();
+            services.AddScoped<MainWindowViewModel>();
+            services.AddScoped<AvailSecuritiesViewModel>();
+            services.AddScoped<TokensManagementViewModel>();
             //services.AddTransient<DbInitializer>();
         }
     }

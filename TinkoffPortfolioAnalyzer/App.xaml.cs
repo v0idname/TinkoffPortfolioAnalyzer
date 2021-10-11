@@ -19,8 +19,13 @@ namespace TinkoffPortfolioAnalyzer
 
         protected override async void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
             var host = Host;
+
+            using var scopedServices = host.Services.CreateScope();
+            var dbInit = new DbInitializer(scopedServices.ServiceProvider.GetRequiredService<PortfolioAnalyzerDb>());
+            await dbInit.InitAsync();
+            
+            base.OnStartup(e);
             await host.StartAsync().ConfigureAwait(false);
         }
 

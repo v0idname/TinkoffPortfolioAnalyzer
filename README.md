@@ -27,6 +27,6 @@ dotnet run
 4. Enjoy)
 
 ## Screenshots
-<img align="left" src="./Screenshots/portfolio_table.png" height="700">
-<img align="center" src="./Screenshots/portfolio_pie_chart.png" height="335">
-<img align="both" src="./Screenshots/snapshots_comparsion.png" height="327">
+<img align="left" src="./Screenshots/portfolio_table.png" height="500">
+<img align="center" src="./Screenshots/portfolio_pie_chart.png" height="235">
+<img align="both" src="./Screenshots/snapshots_comparsion.png" height="227">

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Tinkoff.Trading.OpenApi.Models;
 using TinkoffPortfolioAnalyzer.Models;
@@ -22,7 +23,10 @@ namespace TinkoffPortfolioAnalyzer.Services
 
         public async Task<IEnumerable<TinkoffAccount>> GetAccountsAsync()
         {
-            var accs = await _conService.GetCurrentContext().AccountsAsync().ConfigureAwait(false);
+            var cntx = await _conService.GetConnectionContextAsync();
+            if (cntx == null)
+                return Enumerable.Empty<TinkoffAccount>();
+            var accs = await cntx.AccountsAsync().ConfigureAwait(false);
             var accList = new List<TinkoffAccount>(accs.Count);
             foreach (var acc in accs)
                 accList.Add(new TinkoffAccount(acc));
@@ -32,9 +36,12 @@ namespace TinkoffPortfolioAnalyzer.Services
         public async Task<IEnumerable<PortfolioSecurityInfo>> GetSecuritiesInfoAsync(Account acc)
         {
             if (acc == null)
-                return new List<PortfolioSecurityInfo>();
+                return Enumerable.Empty<PortfolioSecurityInfo>();
 
-            var portfolio = await _conService.GetCurrentContext().PortfolioAsync(acc.BrokerAccountId).ConfigureAwait(false);
+            var cntx = await _conService.GetConnectionContextAsync();
+            if (cntx == null)
+                return Enumerable.Empty<PortfolioSecurityInfo>();
+            var portfolio = await cntx.PortfolioAsync(acc.BrokerAccountId).ConfigureAwait(false);
             var itemsList = new List<PortfolioSecurityInfo>(portfolio.Positions.Count);
             foreach (var item in portfolio.Positions)
             {
@@ -55,9 +62,12 @@ namespace TinkoffPortfolioAnalyzer.Services
         public async Task<SecurityInfoList> GetMarketSecuritiesAsync()
         {
             var secList = new SecurityInfoList();
-            secList.AddMarketInstList(await _conService.GetCurrentContext().MarketBondsAsync().ConfigureAwait(false));
-            secList.AddMarketInstList(await _conService.GetCurrentContext().MarketEtfsAsync().ConfigureAwait(false));
-            secList.AddMarketInstList(await _conService.GetCurrentContext().MarketStocksAsync().ConfigureAwait(false));
+            var cntx = await _conService.GetConnectionContextAsync();
+            if (cntx == null)
+                return secList;
+            secList.AddMarketInstList(await cntx.MarketBondsAsync().ConfigureAwait(false));
+            secList.AddMarketInstList(await cntx.MarketEtfsAsync().ConfigureAwait(false));
+            secList.AddMarketInstList(await cntx.MarketStocksAsync().ConfigureAwait(false));
             return secList;
         }
     }

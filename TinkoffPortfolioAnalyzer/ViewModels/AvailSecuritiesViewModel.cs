@@ -74,6 +74,15 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             await UpdateSnapshots();
         }
 
+        public ICommand LoadedCommand { get; set; }
+
+        private bool CanLoadedCommandExecute(object parameter) => AvailSecSnapshots == null;
+
+        private async void OnLoadedCommandExecuted(object parameter)
+        {
+            await UpdateSnapshots();
+        }
+
         public AvailSecuritiesViewModel(IDataService dataService, ISnapshotsRepository snapService)
         {
             _snapService = snapService;
@@ -81,13 +90,14 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             CreateSnapshotCommand = new RelayCommand(OnCreateSnapshotCommandExecuted, CanCreateSnapshotCommandExecute);
             SelectedSnapChangedCommand = new RelayCommand(OnSelectedSnapChangedCommandExecuted, CanSelectedSnapChangedCommandExecute);
             DeleteSnapshotCommand = new RelayCommand(OnDeleteSnapshotCommandExecuted, CanDeleteSnapshotCommandExecute);
+            LoadedCommand = new RelayCommand(OnLoadedCommandExecuted, CanLoadedCommandExecute);
             SelectedAvailSecSnapshots = new List<AvailSecSnapshot>();
-            UpdateSnapshots().ConfigureAwait(false);
         }
 
         private async Task UpdateSnapshots()
         {
             AvailSecSnapshots = await _snapService.GetAllAsync();
+            OnPropertyChanged(nameof(AvailSecSnapshots));
         }
 
         private List<SecSnapshotDiff> GetSecSnapshotDiffs(List<AvailSecSnapshot> snaps)

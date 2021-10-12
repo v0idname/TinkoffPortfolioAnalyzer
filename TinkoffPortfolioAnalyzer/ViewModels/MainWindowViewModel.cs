@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Library.Commands;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows.Input;
 using TinkoffPortfolioAnalyzer.Data.Repositories;
 using TinkoffPortfolioAnalyzer.Models;
 using TinkoffPortfolioAnalyzer.Services;
@@ -46,7 +48,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             {
                 Set(ref _tinkoffTokens, value);
                 if (TinkoffTokens.Any())
-                    CurrentTinkToken = TinkoffTokens.First();
+                    CurrentTinkToken = _tinkoffTokens.First();
             }
         }
 
@@ -78,6 +80,15 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         }
         #endregion
 
+        public ICommand LoadedCommand { get; set; }
+
+        private bool CanLoadedCommandExecute(object parameter) => TinkoffTokens == null;
+
+        private async void OnLoadedCommandExecuted(object parameter)
+        {
+            await UpdateTokenListAsync();
+        }
+
         public CollectionViewSource SecuritiesViewSource { get; } = new CollectionViewSource();
 
         public MainWindowViewModel(IDataService dataService, ITokensRepository tokensService)
@@ -86,7 +97,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             _tokensService = tokensService;
             _tokensService.RepositoryChanged += _tokensService_RepositoryChanged;
             PropertyChanged += MainWindowViewModel_PropertyChanged;
-            UpdateTokenListAsync().ConfigureAwait(false);
+            LoadedCommand = new RelayCommand(OnLoadedCommandExecuted, CanLoadedCommandExecute);
         }
 
         private async void _tokensService_RepositoryChanged(object sender, System.EventArgs e)

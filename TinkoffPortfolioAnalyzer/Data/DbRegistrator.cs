@@ -22,7 +22,7 @@ namespace TinkoffPortfolioAnalyzer.Data
                     default: 
                         throw new InvalidOperationException($"Тип подключения {dbType} не поддерживается");
                 }
-            });
+            }, ServiceLifetime.Transient, ServiceLifetime.Transient);
 
             return s;
         }

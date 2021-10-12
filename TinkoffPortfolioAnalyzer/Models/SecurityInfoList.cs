@@ -8,7 +8,7 @@ namespace TinkoffPortfolioAnalyzer.Models
     [Serializable]
     public class SecurityInfoList
     {
-        List<SecurityInfo> _list = new();
+        List<SecurityInfo> _list = new(3000);
 
         public void AddMarketInstList(MarketInstrumentList list)
         {

@@ -40,11 +40,12 @@ namespace TinkoffPortfolioAnalyzer
         public static void ConfigureServices(HostBuilderContext host, IServiceCollection services)
         {
             services.AddDatabase(host.Configuration.GetSection("Database"));
-            services.AddSingleton<IConnectionService, TinkConnectionService>();
-            services.AddSingleton<IDataService, DataService>();
-            services.AddTransient<ISnapshotsRepository, SnapshotsXmlRepository>();
-            //services.AddTransient<ITokensRepository, TokensXmlRepository>();
-            services.AddTransient<ITokensRepository, TokensDbRepository>();
+            services.AddScoped<IConnectionService, TinkConnectionService>();
+            services.AddScoped<IDataService, DataService>();
+            //services.AddScoped<ISnapshotsRepository, SnapshotsXmlRepository>();
+            services.AddScoped<ISnapshotsRepository, SnapshotsDbRepository>();
+            //services.AddScoped<ITokensRepository, TokensXmlRepository>();
+            services.AddScoped<ITokensRepository, TokensDbRepository>();
             services.AddScoped<MainWindowViewModel>();
             services.AddScoped<AvailSecuritiesViewModel>();
             services.AddScoped<TokensManagementViewModel>();

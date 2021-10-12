@@ -7,6 +7,6 @@ namespace TinkoffPortfolioAnalyzer.Services
     internal interface IConnectionService
     {
         public Task SetCurrentTokenAsync(TinkoffToken token);
-        public Context GetCurrentContext();
+        public Task<Context> GetConnectionContextAsync();
     }
 }

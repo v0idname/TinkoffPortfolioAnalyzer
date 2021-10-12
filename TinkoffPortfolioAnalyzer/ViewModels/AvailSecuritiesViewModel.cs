@@ -2,6 +2,7 @@
 using Library.ViewModels;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using TinkoffPortfolioAnalyzer.Data.Repositories;
 using TinkoffPortfolioAnalyzer.Models;
@@ -16,7 +17,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         public List<AvailSecSnapshot> SelectedAvailSecSnapshots { get; set; }
 
-        public IEnumerable<AvailSecSnapshot> AvailSecSnapshots => _snapService.GetAll();
+        public IEnumerable<AvailSecSnapshot> AvailSecSnapshots { get; private set; }
 
         private List<SecSnapshotDiff> _secSnapshotDiffs;
         public List<SecSnapshotDiff> SecSnapshotDiffs
@@ -46,8 +47,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         private async void OnCreateSnapshotCommandExecuted(object p)
         {
             var secList = await _dataService.GetMarketSecuritiesAsync();
-            _snapService.Create(secList);
-            OnPropertyChanged(nameof(AvailSecSnapshots));
+            await _snapService.CreateAsync(secList);
+            await UpdateSnapshots();
         }
 
         public ICommand SelectedSnapChangedCommand { get; }
@@ -67,10 +68,10 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private bool CanDeleteSnapshotCommandExecute(object p) => true;
 
-        private void OnDeleteSnapshotCommandExecuted(object p)
+        private async void OnDeleteSnapshotCommandExecuted(object p)
         {
-            _snapService.Remove((AvailSecSnapshot)p);
-            OnPropertyChanged(nameof(AvailSecSnapshots));
+            await _snapService.RemoveAsync((AvailSecSnapshot)p);
+            await UpdateSnapshots();
         }
 
         public AvailSecuritiesViewModel(IDataService dataService, ISnapshotsRepository snapService)
@@ -81,7 +82,12 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             SelectedSnapChangedCommand = new RelayCommand(OnSelectedSnapChangedCommandExecuted, CanSelectedSnapChangedCommandExecute);
             DeleteSnapshotCommand = new RelayCommand(OnDeleteSnapshotCommandExecuted, CanDeleteSnapshotCommandExecute);
             SelectedAvailSecSnapshots = new List<AvailSecSnapshot>();
-            OnPropertyChanged(nameof(AvailSecSnapshots));
+            UpdateSnapshots().ConfigureAwait(false);
+        }
+
+        private async Task UpdateSnapshots()
+        {
+            AvailSecSnapshots = await _snapService.GetAllAsync();
         }
 
         private List<SecSnapshotDiff> GetSecSnapshotDiffs(List<AvailSecSnapshot> snaps)

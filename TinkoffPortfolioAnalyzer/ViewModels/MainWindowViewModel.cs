@@ -86,7 +86,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             _tokensService = tokensService;
             _tokensService.RepositoryChanged += _tokensService_RepositoryChanged;
             PropertyChanged += MainWindowViewModel_PropertyChanged;
-            UpdateTokenListAsync();
+            UpdateTokenListAsync().ConfigureAwait(false);
         }
 
         private async void _tokensService_RepositoryChanged(object sender, System.EventArgs e)

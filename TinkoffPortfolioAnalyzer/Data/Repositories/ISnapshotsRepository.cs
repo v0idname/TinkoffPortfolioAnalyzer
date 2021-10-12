@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TinkoffPortfolioAnalyzer.Models;
 
 namespace TinkoffPortfolioAnalyzer.Data.Repositories
 {
     internal interface ISnapshotsRepository
     {
-        public void Create(SecurityInfoList securityInfoList);
-        public void Remove(AvailSecSnapshot snapshotToDelete);
-        public IEnumerable<AvailSecSnapshot> GetAll();
+        public Task CreateAsync(SecurityInfoList securityInfoList);
+        public Task RemoveAsync(AvailSecSnapshot snapshotToDelete);
+        public Task<IEnumerable<AvailSecSnapshot>> GetAllAsync();
     }
 }

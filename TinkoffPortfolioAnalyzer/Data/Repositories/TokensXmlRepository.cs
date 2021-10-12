@@ -68,6 +68,9 @@ namespace TinkoffPortfolioAnalyzer.Data.Repositories
             RepositoryChanged?.Invoke(this, new EventArgs());
         }
 
-        public async Task<IEnumerable<TinkoffToken>> GetAllAsync() => _tokens.List;
+        public async Task<IEnumerable<TinkoffToken>> GetAllAsync()
+        {
+            return await Task.FromResult(_tokens.List);
+        }
     }
 }

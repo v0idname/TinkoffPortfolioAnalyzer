@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
 using TinkoffPortfolioAnalyzer.Models;
 
@@ -33,14 +34,15 @@ namespace TinkoffPortfolioAnalyzer.Data.Repositories
             }
         }
 
-        public void Create(SecurityInfoList securityInfoList)
+        public async Task CreateAsync(SecurityInfoList securityInfoList)
         {
             var dateTimeNow = DateTime.Now;
             var dateTimeStr = dateTimeNow.ToString(DateTimeFormat);
-            using (var stream = File.OpenWrite($"{SnapPath}/{dateTimeStr}.xml"))
+            await Task.Run(() =>
             {
+                using var stream = File.OpenWrite($"{SnapPath}/{dateTimeStr}.xml");
                 _xmlFormatter.Serialize(stream, securityInfoList);
-            }
+            });
             var newSnapshot = new AvailSecSnapshot
             {
                 CreatedDateTime = dateTimeNow,
@@ -49,12 +51,18 @@ namespace TinkoffPortfolioAnalyzer.Data.Repositories
             _availSecSnapshots.Add(newSnapshot);
         }
 
-        public void Remove(AvailSecSnapshot snapshotToDelete)
+        public async Task RemoveAsync(AvailSecSnapshot snapshotToDelete)
         {
             _availSecSnapshots.Remove(snapshotToDelete);
-            File.Delete($"{SnapPath}/{snapshotToDelete.CreatedDateTime.ToString(DateTimeFormat)}.xml");
+            await Task.Run(() =>
+            {
+                File.Delete($"{SnapPath}/{snapshotToDelete.CreatedDateTime.ToString(DateTimeFormat)}.xml");
+            });
         }
 
-        public IEnumerable<AvailSecSnapshot> GetAll() => _availSecSnapshots;
+        public async Task<IEnumerable<AvailSecSnapshot>> GetAllAsync()
+        {
+            return await Task.FromResult(_availSecSnapshots);
+        }
     }
 }

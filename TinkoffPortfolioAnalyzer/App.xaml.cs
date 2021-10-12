@@ -3,6 +3,7 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.Windows;
 using TinkoffPortfolioAnalyzer.Data;
+using TinkoffPortfolioAnalyzer.Data.Repositories;
 using TinkoffPortfolioAnalyzer.Services;
 using TinkoffPortfolioAnalyzer.ViewModels;
 
@@ -41,7 +42,7 @@ namespace TinkoffPortfolioAnalyzer
             services.AddDatabase(host.Configuration.GetSection("Database"));
             services.AddSingleton<IConnectionService, TinkConnectionService>();
             services.AddSingleton<IDataService, DataService>();
-            services.AddTransient<ISnapshotsRepository, SnapshotXmlService>();
+            services.AddTransient<ISnapshotsRepository, SnapshotsXmlRepository>();
             //services.AddTransient<ITokensRepository, TokensXmlRepository>();
             services.AddTransient<ITokensRepository, TokensDbRepository>();
             services.AddScoped<MainWindowViewModel>();

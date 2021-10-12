@@ -5,16 +5,16 @@ using System.IO;
 using System.Xml.Serialization;
 using TinkoffPortfolioAnalyzer.Models;
 
-namespace TinkoffPortfolioAnalyzer.Services
+namespace TinkoffPortfolioAnalyzer.Data.Repositories
 {
-    internal class SnapshotXmlService : ISnapshotsRepository
+    internal class SnapshotsXmlRepository : ISnapshotsRepository
     {
         private const string SnapPath = "./Snapshots";
         private const string DateTimeFormat = "yyyy-MM-dd_HH-mm-ss";
         private readonly ObservableCollection<AvailSecSnapshot> _availSecSnapshots = new();
         XmlSerializer _xmlFormatter = new XmlSerializer(typeof(SecurityInfoList));
 
-        public SnapshotXmlService()
+        public SnapshotsXmlRepository()
         {
             Directory.CreateDirectory(SnapPath);
             var files = Directory.GetFiles(SnapPath, "*.xml");

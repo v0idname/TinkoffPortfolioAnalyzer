@@ -3,7 +3,7 @@ using Library.ViewModels;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using TinkoffPortfolioAnalyzer.Data;
+using TinkoffPortfolioAnalyzer.Data.Repositories;
 using TinkoffPortfolioAnalyzer.Models;
 
 namespace TinkoffPortfolioAnalyzer.ViewModels

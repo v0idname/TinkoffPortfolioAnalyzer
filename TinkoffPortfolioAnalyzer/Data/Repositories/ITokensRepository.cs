@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using TinkoffPortfolioAnalyzer.Models;
 
-namespace TinkoffPortfolioAnalyzer.Data
+namespace TinkoffPortfolioAnalyzer.Data.Repositories
 {
     internal interface ITokensRepository
     {

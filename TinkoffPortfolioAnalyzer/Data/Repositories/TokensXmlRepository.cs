@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using TinkoffPortfolioAnalyzer.Models;
 
-namespace TinkoffPortfolioAnalyzer.Data
+namespace TinkoffPortfolioAnalyzer.Data.Repositories
 {
     internal class TokensXmlRepository : ITokensRepository
     {

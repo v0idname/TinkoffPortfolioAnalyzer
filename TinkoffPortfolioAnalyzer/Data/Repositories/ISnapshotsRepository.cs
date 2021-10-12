@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using TinkoffPortfolioAnalyzer.Models;
 
-namespace TinkoffPortfolioAnalyzer.Services
+namespace TinkoffPortfolioAnalyzer.Data.Repositories
 {
     internal interface ISnapshotsRepository
     {

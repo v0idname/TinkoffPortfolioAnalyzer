@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Data;
-using TinkoffPortfolioAnalyzer.Data;
+using TinkoffPortfolioAnalyzer.Data.Repositories;
 using TinkoffPortfolioAnalyzer.Models;
 using TinkoffPortfolioAnalyzer.Services;
 

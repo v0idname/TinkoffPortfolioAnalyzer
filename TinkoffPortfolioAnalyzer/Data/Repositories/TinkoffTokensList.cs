@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using TinkoffPortfolioAnalyzer.Models;
 
-namespace TinkoffPortfolioAnalyzer.Data
+namespace TinkoffPortfolioAnalyzer.Data.Repositories
 {
     [Serializable]
     public class TinkoffTokensList

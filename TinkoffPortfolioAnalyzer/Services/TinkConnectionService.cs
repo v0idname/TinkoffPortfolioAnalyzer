@@ -9,33 +9,36 @@ namespace TinkoffPortfolioAnalyzer.Services
     internal class TinkConnectionService : IConnectionService
     {
         private TinkoffToken _currentToken;
+        private Context _context;
 
-        public async Task<Context> GetConnectionContextAsync()
+        public Task<Context> GetConnectionContextAsync()
         {
+            return Task.FromResult(_context);
+        }
+
+        public async Task SetCurrentTokenAsync(TinkoffToken token)
+        {
+            _currentToken = token;
             if (_currentToken == null)
-                return null;
+                return;
 
             switch (_currentToken.Type)
             {
                 case TokenType.Trading:
                     {
-                        return ConnectionFactory.GetConnection(_currentToken.Value).Context;
+                        _context = ConnectionFactory.GetConnection(_currentToken.Value).Context;
+                        break;
                     }
                 case TokenType.Sandbox:
                     {
                         var connection = ConnectionFactory.GetSandboxConnection(_currentToken.Value);
+                        _context = connection.Context;
                         await connection.Context.RegisterAsync(BrokerAccountType.Tinkoff).ConfigureAwait(false);
-                        return connection.Context;
+                        break;
                     }
                 default:
                     throw new ArgumentException("Incorrect type of token", nameof(_currentToken));
             }
-        }
-
-        public Task SetCurrentTokenAsync(TinkoffToken token)
-        {
-            _currentToken = token;
-            return Task.CompletedTask;
         }
     }
 }

@@ -5,7 +5,8 @@
 
 ## Technologies Used
 - .NET 5.0
-- WPF, MVVM
+- WPF, MVVM, TPL
+- IoC (Microsoft.Extensions.Hosting)
 - Entity Framework Core 5.0, MSSQL
 
 ## Features

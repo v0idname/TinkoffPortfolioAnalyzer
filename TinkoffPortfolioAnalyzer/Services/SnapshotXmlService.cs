@@ -7,7 +7,7 @@ using TinkoffPortfolioAnalyzer.Models;
 
 namespace TinkoffPortfolioAnalyzer.Services
 {
-    internal class SnapshotXmlService : ISnapshotService
+    internal class SnapshotXmlService : ISnapshotsRepository
     {
         private const string SnapPath = "./Snapshots";
         private const string DateTimeFormat = "yyyy-MM-dd_HH-mm-ss";
@@ -33,7 +33,7 @@ namespace TinkoffPortfolioAnalyzer.Services
             }
         }
 
-        public void CreateSnapshot(SecurityInfoList securityInfoList)
+        public void Create(SecurityInfoList securityInfoList)
         {
             var dateTimeNow = DateTime.Now;
             var dateTimeStr = dateTimeNow.ToString(DateTimeFormat);
@@ -49,12 +49,12 @@ namespace TinkoffPortfolioAnalyzer.Services
             _availSecSnapshots.Add(newSnapshot);
         }
 
-        public void DeleteSnapshot(AvailSecSnapshot snapshotToDelete)
+        public void Remove(AvailSecSnapshot snapshotToDelete)
         {
             _availSecSnapshots.Remove(snapshotToDelete);
             File.Delete($"{SnapPath}/{snapshotToDelete.CreatedDateTime.ToString(DateTimeFormat)}.xml");
         }
 
-        public IEnumerable<AvailSecSnapshot> GetSnapshots() => _availSecSnapshots;
+        public IEnumerable<AvailSecSnapshot> GetAll() => _availSecSnapshots;
     }
 }

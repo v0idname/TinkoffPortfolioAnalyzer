@@ -11,11 +11,11 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
     internal class AvailSecuritiesViewModel : BaseViewModel
     {
         private readonly IDataService _dataService;
-        private readonly ISnapshotService _snapService;
+        private readonly ISnapshotsRepository _snapService;
 
         public List<AvailSecSnapshot> SelectedAvailSecSnapshots { get; set; }
 
-        public IEnumerable<AvailSecSnapshot> AvailSecSnapshots => _snapService.GetSnapshots();
+        public IEnumerable<AvailSecSnapshot> AvailSecSnapshots => _snapService.GetAll();
 
         private List<SecSnapshotDiff> _secSnapshotDiffs;
         public List<SecSnapshotDiff> SecSnapshotDiffs
@@ -45,7 +45,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         private async void OnCreateSnapshotCommandExecuted(object p)
         {
             var secList = await _dataService.GetMarketSecuritiesAsync();
-            _snapService.CreateSnapshot(secList);
+            _snapService.Create(secList);
             OnPropertyChanged(nameof(AvailSecSnapshots));
         }
 
@@ -68,11 +68,11 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private void OnDeleteSnapshotCommandExecuted(object p)
         {
-            _snapService.DeleteSnapshot((AvailSecSnapshot)p);
+            _snapService.Remove((AvailSecSnapshot)p);
             OnPropertyChanged(nameof(AvailSecSnapshots));
         }
 
-        public AvailSecuritiesViewModel(IDataService dataService, ISnapshotService snapService)
+        public AvailSecuritiesViewModel(IDataService dataService, ISnapshotsRepository snapService)
         {
             _snapService = snapService;
             _dataService = dataService;

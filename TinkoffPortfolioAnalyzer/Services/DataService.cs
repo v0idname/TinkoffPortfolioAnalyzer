@@ -2,44 +2,28 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Tinkoff.Trading.OpenApi.Models;
-using Tinkoff.Trading.OpenApi.Network;
 using TinkoffPortfolioAnalyzer.Models;
 
 namespace TinkoffPortfolioAnalyzer.Services
 {
     internal class DataService : IDataService
     {
-        private Context _curConnectContext;
+        private readonly IConnectionService _conService;
 
-        public async Task<IEnumerable<TinkoffAccount>> GetAccountsAsync(TinkoffToken token)
+        public DataService(IConnectionService conService)
         {
-            var accList = new List<TinkoffAccount>();
+            _conService = conService;
+        }
+        
+        public async Task SetCurrentToken(TinkoffToken token)
+        {
+            await _conService.SetCurrentTokenAsync(token);
+        }
 
-            if (token == null)
-                return accList;
-
-            switch (token.Type)
-            {
-                case TokenType.Trading:
-                    {
-                        var connection = ConnectionFactory.GetConnection(token.Value);
-                        _curConnectContext = connection.Context;
-                        break;
-                    }
-
-                case TokenType.Sandbox:
-                    {
-                        var connection = ConnectionFactory.GetSandboxConnection(token.Value);
-                        await connection.Context.RegisterAsync(BrokerAccountType.Tinkoff).ConfigureAwait(false);
-                        _curConnectContext = connection.Context;
-                        break;
-                    }
-
-                default:
-                    throw new ArgumentException("Incorrect type of token", nameof(token));
-            }
-
-            var accs = await _curConnectContext.AccountsAsync().ConfigureAwait(false);
+        public async Task<IEnumerable<TinkoffAccount>> GetAccountsAsync()
+        {
+            var accs = await _conService.GetCurrentContext().AccountsAsync().ConfigureAwait(false);
+            var accList = new List<TinkoffAccount>(accs.Count);
             foreach (var acc in accs)
                 accList.Add(new TinkoffAccount(acc));
             return accList;
@@ -50,7 +34,7 @@ namespace TinkoffPortfolioAnalyzer.Services
             if (acc == null)
                 return new List<PortfolioSecurityInfo>();
 
-            var portfolio = await _curConnectContext.PortfolioAsync(acc.BrokerAccountId).ConfigureAwait(false);
+            var portfolio = await _conService.GetCurrentContext().PortfolioAsync(acc.BrokerAccountId).ConfigureAwait(false);
             var itemsList = new List<PortfolioSecurityInfo>(portfolio.Positions.Count);
             foreach (var item in portfolio.Positions)
             {
@@ -71,9 +55,9 @@ namespace TinkoffPortfolioAnalyzer.Services
         public async Task<SecurityInfoList> GetMarketSecuritiesAsync()
         {
             var secList = new SecurityInfoList();
-            secList.AddMarketInstList(await _curConnectContext.MarketBondsAsync().ConfigureAwait(false));
-            secList.AddMarketInstList(await _curConnectContext.MarketEtfsAsync().ConfigureAwait(false));
-            secList.AddMarketInstList(await _curConnectContext.MarketStocksAsync().ConfigureAwait(false));
+            secList.AddMarketInstList(await _conService.GetCurrentContext().MarketBondsAsync().ConfigureAwait(false));
+            secList.AddMarketInstList(await _conService.GetCurrentContext().MarketEtfsAsync().ConfigureAwait(false));
+            secList.AddMarketInstList(await _conService.GetCurrentContext().MarketStocksAsync().ConfigureAwait(false));
             return secList;
         }
     }

@@ -102,7 +102,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             }
             else if (e.PropertyName == nameof(CurrentTinkToken))
             {
-                AccountTypes = await _dataService.GetAccountsAsync(CurrentTinkToken);
+                await _dataService.SetCurrentToken(CurrentTinkToken);
+                AccountTypes = await _dataService.GetAccountsAsync();
                 if (AccountTypes.Count() > 0)
                     CurrentAccountType = AccountTypes.First();
             }

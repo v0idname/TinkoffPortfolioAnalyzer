@@ -1,51 +1,61 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Xunit;
-using Moq;
-using TinkoffPortfolioAnalyzer.Data;
 using Microsoft.EntityFrameworkCore;
-using TinkoffPortfolioAnalyzer.Models;
+using System.Linq;
+using System.Threading.Tasks;
+using TinkoffPortfolioAnalyzer.Data;
 using TinkoffPortfolioAnalyzer.Data.Repositories;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using TinkoffPortfolioAnalyzer.Models;
+using Xunit;
 
-namespace TinkPortfAnalyzer.Tests
+namespace TinkPortfAnalyzer.Tests.Repositories
 {
-    public class TokensDbRepositoryTests
+    public class TokensDbRepositoryTests : DbRepositoryTestBase
     {
+        private TinkoffToken token1 = new()
+        {
+            Id = 1,
+            Type = TokenType.Sandbox,
+            Value = "TestTokenValue1"
+        };
+        private TinkoffToken token2 = new()
+        {
+            Id = 2,
+            Type = TokenType.Trading,
+            Value = "TestTokenValue2"
+        };
+
+        [Fact]
+        public async Task GetAllAsync_ReturnsOneToken()
+        {
+            _context.Tokens.Add(token1);
+            await _context.SaveChangesAsync();
+            var tokensDbRepo = new TokensDbRepository(_context);
+
+            var tokens = await tokensDbRepo.GetAllAsync();
+
+            Assert.True(tokens.Count() == 1 && tokens.Contains(token1));
+        }
+
         [Fact]
         public async Task AddAsync_WithCorrectToken()
         {
-            Mock<PortfolioAnalyzerDb> _dbContextMock = new Mock<PortfolioAnalyzerDb>();
-            Mock<DbSet<TinkoffToken>> _dbTokenSetMock = new Mock<DbSet<TinkoffToken>>();
-            var token = new TinkoffToken() { Id = 0, Type = TokenType.Sandbox, Value = "TestTokenValue" };
-            _dbContextMock.Setup(s => s.Set<TinkoffToken>()).Returns(_dbTokenSetMock.Object);
-            _dbTokenSetMock.Setup(s => s.AddAsync(It.IsAny<TinkoffToken>(), It.IsAny<CancellationToken>()))
-                .Returns(ValueTask.FromResult((EntityEntry<TinkoffToken>)null));
+            var tokensDbRepo = new TokensDbRepository(_context);
 
-            var tokensDbRepo = new TokensDbRepository(_dbContextMock.Object);
-            await tokensDbRepo.AddAsync(token);
+            await tokensDbRepo.AddAsync(token1);
 
-            _dbContextMock.Verify(x => x.Set<TinkoffToken>(), Times.Once);
-            _dbTokenSetMock.Verify(x => x.AddAsync(It.IsAny<TinkoffToken>(), It.IsAny<CancellationToken>()), Times.Once);
+            var tokens = await tokensDbRepo.GetAllAsync();
+            Assert.True(tokens.Count() == 1 && tokens.Contains(token1));
         }
 
         [Fact]
         public async Task RemoveAsync_WithCorrectToken()
         {
-            Mock<PortfolioAnalyzerDb> _dbContextMock = new Mock<PortfolioAnalyzerDb>();
-            Mock<DbSet<TinkoffToken>> _dbTokenSetMock = new Mock<DbSet<TinkoffToken>>();
-            var token = new TinkoffToken() { Id = 0, Type = TokenType.Sandbox, Value = "TestTokenValue" };
-            _dbContextMock.Setup(s => s.Set<TinkoffToken>()).Returns(_dbTokenSetMock.Object);
-            _dbTokenSetMock.Setup(s => s.Remove(It.IsAny<TinkoffToken>()))
-                .Returns((EntityEntry<TinkoffToken>)null);
+            _context.Tokens.Add(token1);
+            var tokensDbRepo = new TokensDbRepository(_context);
 
-            var tokensDbRepo = new TokensDbRepository(_dbContextMock.Object);
-            await tokensDbRepo.RemoveAsync(token);
+            await tokensDbRepo.RemoveAsync(token1);
 
-            _dbContextMock.Verify(x => x.Set<TinkoffToken>(), Times.Once);
-            _dbTokenSetMock.Verify(x => x.Remove(It.IsAny<TinkoffToken>()), Times.Once);
+            var tokens = await tokensDbRepo.GetAllAsync();
+            Assert.True(tokens.Count() == 0 && !tokens.Contains(token1));
         }
     }
 }

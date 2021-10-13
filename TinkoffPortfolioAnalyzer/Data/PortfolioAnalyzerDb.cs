@@ -9,8 +9,6 @@ namespace TinkoffPortfolioAnalyzer.Data
 
         public DbSet<AvailSecSnapshot> Snapshots { get; set; }
 
-        public PortfolioAnalyzerDb() { }
-
         public PortfolioAnalyzerDb(DbContextOptions<PortfolioAnalyzerDb> options) : base(options) { }
     }
 }

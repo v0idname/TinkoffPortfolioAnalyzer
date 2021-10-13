@@ -19,6 +19,8 @@ namespace TinkoffPortfolioAnalyzer.Data.Repositories
 
         public async Task AddAsync(TinkoffToken tokenToAdd)
         {
+            if (await _db.Tokens.ContainsAsync(tokenToAdd))
+                return;
             var res = await _db.Tokens.AddAsync(tokenToAdd);
             await _db.SaveChangesAsync();
             RepositoryChanged?.Invoke(this, new EventArgs());
@@ -31,6 +33,8 @@ namespace TinkoffPortfolioAnalyzer.Data.Repositories
 
         public async Task RemoveAsync(TinkoffToken tokenToDelete)
         {
+            if (!await _db.Tokens.ContainsAsync(tokenToDelete))
+                return;
             _db.Tokens.Remove(tokenToDelete);
             await _db.SaveChangesAsync();
             RepositoryChanged?.Invoke(this, new EventArgs());

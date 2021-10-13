@@ -6,7 +6,7 @@ using TinkoffPortfolioAnalyzer.Models;
 
 namespace TinkoffPortfolioAnalyzer.Data.Repositories
 {
-    internal class SnapshotsDbRepository : ISnapshotsRepository
+    public class SnapshotsDbRepository : ISnapshotsRepository
     {
         private readonly PortfolioAnalyzerDb _db;
         private DbSet<AvailSecSnapshot> _snapshots;
@@ -17,12 +17,12 @@ namespace TinkoffPortfolioAnalyzer.Data.Repositories
             _snapshots = _db.Set<AvailSecSnapshot>();
         }
 
-        public async Task CreateAsync(SecurityInfoList securityInfoList)
+        public async Task CreateAsync(IEnumerable<SecurityInfo> securitiesInfo)
         {
             await _snapshots.AddAsync(new AvailSecSnapshot()
             {
                 CreatedDateTime = DateTime.Now,
-                Securities = securityInfoList.List
+                Securities = securitiesInfo
             });
             await _db.SaveChangesAsync();
         }

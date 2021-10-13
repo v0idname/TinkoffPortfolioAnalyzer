@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Tinkoff.Trading.OpenApi.Models;
+using TinkoffPortfolioAnalyzer.Data.Repositories;
 using TinkoffPortfolioAnalyzer.Models;
 
 namespace TinkoffPortfolioAnalyzer.Services
@@ -59,16 +60,16 @@ namespace TinkoffPortfolioAnalyzer.Services
             return itemsList;
         }
 
-        public async Task<SecurityInfoList> GetMarketSecuritiesAsync()
+        public async Task<IEnumerable<SecurityInfo>> GetMarketSecuritiesAsync()
         {
             var secList = new SecurityInfoList();
             var cntx = await _conService.GetConnectionContextAsync();
             if (cntx == null)
-                return secList;
+                return secList.List;
             secList.AddMarketInstList(await cntx.MarketBondsAsync().ConfigureAwait(false));
             secList.AddMarketInstList(await cntx.MarketEtfsAsync().ConfigureAwait(false));
             secList.AddMarketInstList(await cntx.MarketStocksAsync().ConfigureAwait(false));
-            return secList;
+            return secList.List;
         }
     }
 }

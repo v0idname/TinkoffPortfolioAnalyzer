@@ -2,13 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using Tinkoff.Trading.OpenApi.Models;
+using TinkoffPortfolioAnalyzer.Models;
 
-namespace TinkoffPortfolioAnalyzer.Models
+namespace TinkoffPortfolioAnalyzer.Data.Repositories
 {
     [Serializable]
     public class SecurityInfoList
     {
         List<SecurityInfo> _list = new(3000);
+
+        public SecurityInfoList() { }
+
+        public SecurityInfoList(IEnumerable<SecurityInfo> securitiesInfo)
+        {
+            _list = new List<SecurityInfo>(securitiesInfo);
+        }
 
         public void AddMarketInstList(MarketInstrumentList list)
         {

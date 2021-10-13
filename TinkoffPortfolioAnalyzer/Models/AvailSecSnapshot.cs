@@ -7,6 +7,6 @@ namespace TinkoffPortfolioAnalyzer.Models
     public class AvailSecSnapshot : Entity
     {
         public DateTime CreatedDateTime { get; set; }
-        public ICollection<SecurityInfo> Securities { get; set; }
+        public IEnumerable<SecurityInfo> Securities { get; set; }
     }
 }

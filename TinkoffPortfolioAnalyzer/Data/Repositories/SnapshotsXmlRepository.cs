@@ -34,19 +34,19 @@ namespace TinkoffPortfolioAnalyzer.Data.Repositories
             }
         }
 
-        public async Task CreateAsync(SecurityInfoList securityInfoList)
+        public async Task CreateAsync(IEnumerable<SecurityInfo> securitiesInfo)
         {
             var dateTimeNow = DateTime.Now;
             var dateTimeStr = dateTimeNow.ToString(DateTimeFormat);
             await Task.Run(() =>
             {
                 using var stream = File.OpenWrite($"{SnapPath}/{dateTimeStr}.xml");
-                _xmlFormatter.Serialize(stream, securityInfoList);
+                _xmlFormatter.Serialize(stream, new SecurityInfoList(securitiesInfo));
             });
             var newSnapshot = new AvailSecSnapshot
             {
                 CreatedDateTime = dateTimeNow,
-                Securities = securityInfoList.List
+                Securities = securitiesInfo
             };
             _availSecSnapshots.Add(newSnapshot);
         }

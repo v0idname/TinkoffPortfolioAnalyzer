@@ -16,7 +16,7 @@ namespace TinkoffPortfolioAnalyzer.Services
             _conService = conService;
         }
         
-        public async Task SetCurrentToken(TinkoffToken token)
+        public async Task SetCurrentTokenAsync(TinkoffToken token)
         {
             await _conService.SetCurrentTokenAsync(token);
         }

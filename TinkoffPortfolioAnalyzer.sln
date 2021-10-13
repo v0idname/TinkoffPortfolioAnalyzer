@@ -5,9 +5,9 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TinkoffPortfolioAnalyzer", "TinkoffPortfolioAnalyzer\TinkoffPortfolioAnalyzer.csproj", "{297CE729-4E42-42FA-9993-27F064EAE03F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{C301B41C-ACC6-4BDD-BC09-0713F5FDADF8}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library", "Library\Library.csproj", "{B03C5277-620D-474E-BFFB-E32FEB452770}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinkPortfAnalyzer.Tests", "TinkPortfAnalyzer.Tests\TinkPortfAnalyzer.Tests.csproj", "{B01A3159-8779-4471-AEC9-58F7BABD18F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +23,10 @@ Global
 		{B03C5277-620D-474E-BFFB-E32FEB452770}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B03C5277-620D-474E-BFFB-E32FEB452770}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B03C5277-620D-474E-BFFB-E32FEB452770}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B01A3159-8779-4471-AEC9-58F7BABD18F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B01A3159-8779-4471-AEC9-58F7BABD18F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B01A3159-8779-4471-AEC9-58F7BABD18F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B01A3159-8779-4471-AEC9-58F7BABD18F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,7 +6,7 @@ using TinkoffPortfolioAnalyzer.Models;
 
 namespace TinkoffPortfolioAnalyzer.Data.Repositories
 {
-    internal class TokensDbRepository : ITokensRepository
+    public class TokensDbRepository : ITokensRepository
     {
         private readonly PortfolioAnalyzerDb _db;
         private readonly DbSet<TinkoffToken> _tokens;

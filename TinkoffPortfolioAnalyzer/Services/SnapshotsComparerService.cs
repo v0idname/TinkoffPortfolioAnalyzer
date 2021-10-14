@@ -4,9 +4,9 @@ using TinkoffPortfolioAnalyzer.Models;
 
 namespace TinkoffPortfolioAnalyzer.Services
 {
-    public class SnapshotsComparerService : ISnapshotsComparerService
+    public class SnapshotsComparerService
     {
-        public IEnumerable<SecSnapshotDiff> Compare2Snapshots(IEnumerable<AvailSecSnapshot> snaps)
+        public static IEnumerable<SecSnapshotDiff> Compare2Snapshots(IEnumerable<AvailSecSnapshot> snaps)
         {
             if (snaps.Count() != 2)
                 return Enumerable.Empty<SecSnapshotDiff>();

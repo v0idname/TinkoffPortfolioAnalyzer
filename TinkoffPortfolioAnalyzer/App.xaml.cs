@@ -42,7 +42,6 @@ namespace TinkoffPortfolioAnalyzer
             services.AddDatabase(host.Configuration.GetSection("Database"));
             services.AddScoped<IConnectionService, TinkConnectionService>();
             services.AddScoped<IDataService, TinkDataService>();
-            services.AddScoped<ISnapshotsComparerService, SnapshotsComparerService>();
             //services.AddScoped<ISnapshotsRepository, SnapshotsXmlRepository>();
             services.AddScoped<ISnapshotsRepository, SnapshotsDbRepository>();
             //services.AddScoped<ITokensRepository, TokensXmlRepository>();

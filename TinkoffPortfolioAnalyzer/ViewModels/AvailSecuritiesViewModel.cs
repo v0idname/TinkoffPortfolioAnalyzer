@@ -14,7 +14,6 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
     {
         private readonly IDataService _dataService;
         private readonly ISnapshotsRepository _snapRepo;
-        private readonly ISnapshotsComparerService _snapService;
 
         public IEnumerable<AvailSecSnapshot> SelectedAvailSecSnapshots { get; set; }
 
@@ -58,7 +57,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private void OnSelectedSnapChangedCommandExecuted(object p)
         {
-            SecSnapshotDiffs = _snapService.Compare2Snapshots(SelectedAvailSecSnapshots);
+            SecSnapshotDiffs = SnapshotsComparerService.Compare2Snapshots(SelectedAvailSecSnapshots);
             if (SelectedAvailSecSnapshots.Count() > 0)
                 SelectedSnap0Name = SelectedAvailSecSnapshots.ElementAt(0).CreatedDateTime.ToString("yyyy-MM-dd HH:mm:ss");
             if (SelectedAvailSecSnapshots.Count() > 1)
@@ -84,11 +83,10 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             await UpdateSnapshots();
         }
 
-        public AvailSecuritiesViewModel(IDataService dataService, ISnapshotsRepository snapRepo, ISnapshotsComparerService snapService)
+        public AvailSecuritiesViewModel(IDataService dataService, ISnapshotsRepository snapRepo)
         {
             _snapRepo = snapRepo;
             _dataService = dataService;
-            _snapService = snapService;
             CreateSnapshotCommand = new RelayCommand(OnCreateSnapshotCommandExecuted, CanCreateSnapshotCommandExecute);
             SelectedSnapChangedCommand = new RelayCommand(OnSelectedSnapChangedCommandExecuted, CanSelectedSnapChangedCommandExecute);
             DeleteSnapshotCommand = new RelayCommand(OnDeleteSnapshotCommandExecuted, CanDeleteSnapshotCommandExecute);

@@ -13,7 +13,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
     internal class AvailSecuritiesViewModel : BaseViewModel
     {
         private readonly IDataService _dataService;
-        private readonly ISnapshotsRepository _snapService;
+        private readonly ISnapshotsRepository _snapRepo;
+        private readonly ISnapshotsComparerService _snapService;
 
         public IEnumerable<AvailSecSnapshot> SelectedAvailSecSnapshots { get; set; }
 
@@ -47,7 +48,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         private async void OnCreateSnapshotCommandExecuted(object p)
         {
             var secList = await _dataService.GetMarketSecuritiesAsync();
-            await _snapService.CreateAsync(secList);
+            await _snapRepo.CreateAsync(secList);
             await UpdateSnapshots();
         }
 
@@ -57,7 +58,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private void OnSelectedSnapChangedCommandExecuted(object p)
         {
-            SecSnapshotDiffs = GetSecSnapshotDiffs(SelectedAvailSecSnapshots);
+            SecSnapshotDiffs = _snapService.Compare2Snapshots(SelectedAvailSecSnapshots);
             if (SelectedAvailSecSnapshots.Count() > 0)
                 SelectedSnap0Name = SelectedAvailSecSnapshots.ElementAt(0).CreatedDateTime.ToString("yyyy-MM-dd HH:mm:ss");
             if (SelectedAvailSecSnapshots.Count() > 1)
@@ -70,7 +71,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private async void OnDeleteSnapshotCommandExecuted(object p)
         {
-            await _snapService.RemoveAsync((AvailSecSnapshot)p);
+            await _snapRepo.RemoveAsync((AvailSecSnapshot)p);
             await UpdateSnapshots();
         }
 
@@ -83,10 +84,11 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             await UpdateSnapshots();
         }
 
-        public AvailSecuritiesViewModel(IDataService dataService, ISnapshotsRepository snapService)
+        public AvailSecuritiesViewModel(IDataService dataService, ISnapshotsRepository snapRepo, ISnapshotsComparerService snapService)
         {
-            _snapService = snapService;
+            _snapRepo = snapRepo;
             _dataService = dataService;
+            _snapService = snapService;
             CreateSnapshotCommand = new RelayCommand(OnCreateSnapshotCommandExecuted, CanCreateSnapshotCommandExecute);
             SelectedSnapChangedCommand = new RelayCommand(OnSelectedSnapChangedCommandExecuted, CanSelectedSnapChangedCommandExecute);
             DeleteSnapshotCommand = new RelayCommand(OnDeleteSnapshotCommandExecuted, CanDeleteSnapshotCommandExecute);
@@ -96,40 +98,8 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private async Task UpdateSnapshots()
         {
-            AvailSecSnapshots = await _snapService.GetAllAsync();
-
-            // debug
-            //SecSnapshotDiffs = GetSecSnapshotDiffs(AvailSecSnapshots);
-
+            AvailSecSnapshots = await _snapRepo.GetAllAsync();
             OnPropertyChanged(nameof(AvailSecSnapshots));
-        }
-
-        private IEnumerable<SecSnapshotDiff> GetSecSnapshotDiffs(IEnumerable<AvailSecSnapshot> snaps)
-        {
-            var secSnapshotDiff = new List<SecSnapshotDiff>();
-
-            if (snaps.Count() != 2)
-                return secSnapshotDiff;
-
-            var exclusiveSecurities = new List<List<SecurityInfo>>(2);
-            exclusiveSecurities.Add(snaps.First().Securities.Except(snaps.Last().Securities).ToList());
-            exclusiveSecurities.Add(snaps.Last().Securities.Except(snaps.First().Securities).ToList());
-
-            for (int i = 0; i < exclusiveSecurities.Count; i++)
-            {
-                for (int j = 0; j < exclusiveSecurities[i].Count; j++)
-                {
-                    secSnapshotDiff.Add(new SecSnapshotDiff()
-                    {
-                        Ticker = exclusiveSecurities[i][j].Ticker,
-                        Name = exclusiveSecurities[i][j].Name,
-                        IsSnap0Contains = i == 0,
-                        IsSnap1Contains = i == 1
-                    });
-                }
-            }
-
-            return secSnapshotDiff;
         }
     }
 }

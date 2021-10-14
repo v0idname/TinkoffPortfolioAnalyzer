@@ -15,12 +15,12 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         private readonly IDataService _dataService;
         private readonly ISnapshotsRepository _snapService;
 
-        public List<AvailSecSnapshot> SelectedAvailSecSnapshots { get; set; }
+        public IEnumerable<AvailSecSnapshot> SelectedAvailSecSnapshots { get; set; }
 
         public IEnumerable<AvailSecSnapshot> AvailSecSnapshots { get; private set; }
 
-        private List<SecSnapshotDiff> _secSnapshotDiffs;
-        public List<SecSnapshotDiff> SecSnapshotDiffs
+        private IEnumerable<SecSnapshotDiff> _secSnapshotDiffs;
+        public IEnumerable<SecSnapshotDiff> SecSnapshotDiffs
         {
             get => _secSnapshotDiffs;
             set => Set(ref _secSnapshotDiffs, value);
@@ -58,10 +58,10 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         private void OnSelectedSnapChangedCommandExecuted(object p)
         {
             SecSnapshotDiffs = GetSecSnapshotDiffs(SelectedAvailSecSnapshots);
-            if (SelectedAvailSecSnapshots.Count > 0)
-                SelectedSnap0Name = SelectedAvailSecSnapshots[0].CreatedDateTime.ToString("yyyy-MM-dd HH:mm:ss");
-            if (SelectedAvailSecSnapshots.Count > 1)
-                SelectedSnap1Name = SelectedAvailSecSnapshots[1].CreatedDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+            if (SelectedAvailSecSnapshots.Count() > 0)
+                SelectedSnap0Name = SelectedAvailSecSnapshots.ElementAt(0).CreatedDateTime.ToString("yyyy-MM-dd HH:mm:ss");
+            if (SelectedAvailSecSnapshots.Count() > 1)
+                SelectedSnap1Name = SelectedAvailSecSnapshots.ElementAt(1).CreatedDateTime.ToString("yyyy-MM-dd HH:mm:ss");
         }
 
         public ICommand DeleteSnapshotCommand { get; }
@@ -97,19 +97,23 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
         private async Task UpdateSnapshots()
         {
             AvailSecSnapshots = await _snapService.GetAllAsync();
+
+            // debug
+            //SecSnapshotDiffs = GetSecSnapshotDiffs(AvailSecSnapshots);
+
             OnPropertyChanged(nameof(AvailSecSnapshots));
         }
 
-        private List<SecSnapshotDiff> GetSecSnapshotDiffs(List<AvailSecSnapshot> snaps)
+        private IEnumerable<SecSnapshotDiff> GetSecSnapshotDiffs(IEnumerable<AvailSecSnapshot> snaps)
         {
             var secSnapshotDiff = new List<SecSnapshotDiff>();
 
-            if (snaps.Count != 2)
+            if (snaps.Count() != 2)
                 return secSnapshotDiff;
 
             var exclusiveSecurities = new List<List<SecurityInfo>>(2);
-            exclusiveSecurities.Add(snaps[0].Securities.Except(snaps[1].Securities).ToList());
-            exclusiveSecurities.Add(snaps[1].Securities.Except(snaps[0].Securities).ToList());
+            exclusiveSecurities.Add(snaps.First().Securities.Except(snaps.Last().Securities).ToList());
+            exclusiveSecurities.Add(snaps.Last().Securities.Except(snaps.First().Securities).ToList());
 
             for (int i = 0; i < exclusiveSecurities.Count; i++)
             {

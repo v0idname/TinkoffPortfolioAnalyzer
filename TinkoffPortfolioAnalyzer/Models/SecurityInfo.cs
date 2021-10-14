@@ -17,7 +17,7 @@ namespace TinkoffPortfolioAnalyzer.Models
 
         public bool Equals(SecurityInfo other)
         {
-            return Ticker == other?.Ticker;
+            return Ticker == other?.Ticker && base.Equals(other);
         }
 
         public override int GetHashCode()
@@ -27,7 +27,7 @@ namespace TinkoffPortfolioAnalyzer.Models
 
         public override bool Equals(object obj)
         {
-            return Equals(obj as SecurityInfo);
+            return Equals(obj as SecurityInfo) && base.Equals(obj);
         }
     }
 }

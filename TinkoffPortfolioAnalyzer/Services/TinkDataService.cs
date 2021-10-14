@@ -8,11 +8,11 @@ using TinkoffPortfolioAnalyzer.Models;
 
 namespace TinkoffPortfolioAnalyzer.Services
 {
-    internal class DataService : IDataService
+    internal class TinkDataService : IDataService
     {
         private readonly IConnectionService _conService;
 
-        public DataService(IConnectionService conService)
+        public TinkDataService(IConnectionService conService)
         {
             _conService = conService;
         }

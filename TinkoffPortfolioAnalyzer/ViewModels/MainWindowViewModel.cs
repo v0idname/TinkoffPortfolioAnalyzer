@@ -1,7 +1,9 @@
 ﻿using Library.Commands;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Input;
@@ -113,9 +115,16 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
             }
             else if (e.PropertyName == nameof(CurrentTinkToken))
             {
-                await _dataService.SetCurrentTokenAsync(CurrentTinkToken);
-                AccountTypes = await _dataService.GetAccountsAsync();
-                if (AccountTypes.Count() > 0)
+                try
+                {
+                    await _dataService.SetCurrentTokenAsync(CurrentTinkToken);
+                    AccountTypes = await _dataService.GetAccountsAsync();
+                } catch (HttpRequestException ex)
+                {
+                    // TODO: handle this!!
+                }
+
+                if (AccountTypes?.Count() > 0)
                     CurrentAccountType = AccountTypes.First();
             }
         }

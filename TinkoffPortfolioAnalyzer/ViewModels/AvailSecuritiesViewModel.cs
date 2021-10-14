@@ -57,7 +57,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
 
         private void OnSelectedSnapChangedCommandExecuted(object p)
         {
-            SecSnapshotDiffs = SnapshotsComparerService.Compare2Snapshots(SelectedAvailSecSnapshots);
+            SecSnapshotDiffs = SnapshotsComparerService.Compare2SnapsBySecurities(SelectedAvailSecSnapshots);
             if (SelectedAvailSecSnapshots.Count() > 0)
                 SelectedSnap0Name = SelectedAvailSecSnapshots.ElementAt(0).CreatedDateTime.ToString("yyyy-MM-dd HH:mm:ss");
             if (SelectedAvailSecSnapshots.Count() > 1)

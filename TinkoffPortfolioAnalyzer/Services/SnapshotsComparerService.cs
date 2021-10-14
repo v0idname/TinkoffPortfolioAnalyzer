@@ -6,7 +6,7 @@ namespace TinkoffPortfolioAnalyzer.Services
 {
     public class SnapshotsComparerService
     {
-        public static IEnumerable<SecSnapshotDiff> Compare2Snapshots(IEnumerable<AvailSecSnapshot> snaps)
+        public static IEnumerable<SecSnapshotDiff> Compare2SnapsBySecurities(IEnumerable<AvailSecSnapshot> snaps)
         {
             if (snaps.Count() != 2)
                 return Enumerable.Empty<SecSnapshotDiff>();

@@ -26,5 +26,10 @@ namespace TinkoffPortfolioAnalyzer.Data
 
             return s;
         }
+
+        public static PortfolioAnalyzerDb GetDatabaseContext(this IServiceProvider provider)
+        {
+            return provider.GetRequiredService<PortfolioAnalyzerDb>();
+        }
     }
 }

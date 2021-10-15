@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Windows;
@@ -22,7 +23,8 @@ namespace TinkoffPortfolioAnalyzer
         {
             var host = Host;
 
-            //using var scopedServices = host.Services.CreateScope();
+            using var scopedServices = host.Services.CreateScope();
+            await scopedServices.ServiceProvider.GetDatabaseContext().Database.MigrateAsync();
             //await scopedServices.ServiceProvider.GetRequiredService<DbInitializer>().InitAsync();
 
             base.OnStartup(e);

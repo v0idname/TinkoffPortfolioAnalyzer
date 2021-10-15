@@ -9,6 +9,7 @@
 - WPF, MVVM, TPL
 - IoC (Microsoft.Extensions.Hosting)
 - Entity Framework Core 5.0, MSSQL
+- xUnit, Moq
 
 ## Features
 - Просмотр (+ сортировка по различным параметрам) всех бумаг во всех доступных портфелях.

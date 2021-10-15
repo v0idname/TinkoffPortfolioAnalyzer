@@ -15,7 +15,7 @@ namespace TinkoffPortfolioAnalyzer.Services
             exclusiveSecurities.Add(snaps.First().Securities.Except(snaps.Last().Securities).ToList());
             exclusiveSecurities.Add(snaps.Last().Securities.Except(snaps.First().Securities).ToList());
 
-            var secSnapshotDiff = new List<SecSnapshotDiff>(exclusiveSecurities.Sum(l => l.Count()));
+            var secSnapshotDiff = new List<SecSnapshotDiff>(exclusiveSecurities.Sum(l => l.Count));
             for (int i = 0; i < exclusiveSecurities.Count; i++)
             {
                 for (int j = 0; j < exclusiveSecurities[i].Count; j++)

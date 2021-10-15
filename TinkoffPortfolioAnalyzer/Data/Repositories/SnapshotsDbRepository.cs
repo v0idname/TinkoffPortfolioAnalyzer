@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using TinkoffPortfolioAnalyzer.Models;
 
@@ -17,10 +18,22 @@ namespace TinkoffPortfolioAnalyzer.Data.Repositories
 
         public async Task CreateAsync(IEnumerable<SecurityInfo> securitiesInfo)
         {
+            var secsToAdd = securitiesInfo.Except(_db.AvailSecurities).ToList();
+            await _db.AvailSecurities.AddRangeAsync(secsToAdd);
+            await _db.SaveChangesAsync();
+
+            var intersect = _db.AvailSecurities.AsEnumerable().Intersect(securitiesInfo).ToList();
+
+            //var securitiesInfoWithId = new List<SecurityInfo>(securitiesInfo.Count());
+            //foreach (var sec in securitiesInfo)
+            //{
+            //    securitiesInfoWithId.AddRange(_db.AvailSecurities.Where(s => s.Equals(sec)).ToList());
+            //}
+
             await _db.Snapshots.AddAsync(new AvailSecSnapshot()
             {
                 CreatedDateTime = DateTime.Now,
-                Securities = securitiesInfo
+                Securities = intersect
             });
             await _db.SaveChangesAsync();
         }

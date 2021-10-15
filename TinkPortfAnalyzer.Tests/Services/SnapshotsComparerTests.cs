@@ -45,7 +45,7 @@ namespace TinkPortfAnalyzer.Tests.Services
         }
 
         [Fact]
-        public void Compare2SnapsBySecurities_WithDiffId_ReturnsAllAsDiff()
+        public void Compare2SnapsBySecurities_WithDiffId_ReturnsEmptyDiff()
         {
             var snaps = CreateSameSnaps(snapCount: 2, secCount: 1);
             snaps[0].Securities.ElementAt(0).Id = 0;
@@ -53,7 +53,7 @@ namespace TinkPortfAnalyzer.Tests.Services
 
             var diff = SnapshotsComparerService.Compare2SnapsBySecurities(snaps);
 
-            Assert.True(diff.Count() == 2);
+            Assert.Empty(diff);
         }
 
         [Fact]

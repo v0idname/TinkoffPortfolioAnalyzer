@@ -15,7 +15,7 @@ namespace TinkoffPortfolioAnalyzer.Data.Repositories
             _db = db;
         }
 
-        public event EventHandler RepositoryChanged;
+        public event EventHandler<EventArgs> RepositoryChanged;
 
         public async Task AddAsync(TinkoffToken tokenToAdd)
         {

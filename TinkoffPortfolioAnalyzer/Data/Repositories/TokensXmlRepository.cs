@@ -13,7 +13,7 @@ namespace TinkoffPortfolioAnalyzer.Data.Repositories
         private const string TokensFileName = "./tokens.xml";
         XmlSerializer _xmlFormatter = new XmlSerializer(typeof(TinkoffTokensList));
 
-        public event EventHandler RepositoryChanged;
+        public event EventHandler<EventArgs> RepositoryChanged;
 
         public TokensXmlRepository()
         {

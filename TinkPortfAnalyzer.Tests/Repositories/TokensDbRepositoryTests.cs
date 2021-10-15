@@ -31,7 +31,7 @@ namespace TinkPortfAnalyzer.Tests.Repositories
 
             var tokens = await tokensDbRepo.GetAllAsync();
 
-            Assert.True(tokens.Count() == 1);
+            Assert.Single(tokens);
             Assert.Contains(testToken1, tokens);
         }
 
@@ -40,7 +40,10 @@ namespace TinkPortfAnalyzer.Tests.Repositories
         {
             var tokensDbRepo = new TokensDbRepository(_context);
 
-            await tokensDbRepo.AddAsync(testToken1);
+            await Assert.RaisesAsync<EventArgs>(
+                h => tokensDbRepo.RepositoryChanged += h,
+                h => tokensDbRepo.RepositoryChanged -= h,
+                async () => await tokensDbRepo.AddAsync(testToken1));
 
             var tokens = await tokensDbRepo.GetAllAsync();
             Assert.True(tokens.Count() == 1);
@@ -56,7 +59,7 @@ namespace TinkPortfAnalyzer.Tests.Repositories
             await tokensDbRepo.AddAsync(testToken1);
 
             var tokens = await tokensDbRepo.GetAllAsync();
-            Assert.True(tokens.Count() == 1);
+            Assert.Single(tokens);
             Assert.Contains(testToken1, tokens);
         }
 
@@ -64,23 +67,32 @@ namespace TinkPortfAnalyzer.Tests.Repositories
         public async Task RemoveAsync_WithCorrectToken()
         {
             _context.Tokens.Add(testToken1);
+            _context.Tokens.Add(testToken2);
+            await _context.SaveChangesAsync();
             var tokensDbRepo = new TokensDbRepository(_context);
 
-            await tokensDbRepo.RemoveAsync(testToken1);
-
+            await Assert.RaisesAsync<EventArgs>(
+                h => tokensDbRepo.RepositoryChanged += h,
+                h => tokensDbRepo.RepositoryChanged -= h,
+                async () => await tokensDbRepo.RemoveAsync(testToken1));
+            
             var tokens = await tokensDbRepo.GetAllAsync();
-            Assert.Empty(tokens);
+            Assert.Single(tokens);
             Assert.DoesNotContain(testToken1, tokens);
         }
 
         [Fact]
         public async Task RemoveAsync_WithNotExistedToken()
         {
+            _context.Tokens.Add(testToken1);
+            _context.Tokens.Add(testToken2);
+            await _context.SaveChangesAsync();
             var tokensDbRepo = new TokensDbRepository(_context);
 
-            await tokensDbRepo.RemoveAsync(testToken1);
+            await tokensDbRepo.RemoveAsync(new TinkoffToken());
 
-            Assert.True(true);
+            var tokens = await tokensDbRepo.GetAllAsync();
+            Assert.True(tokens.Count() == 2);
         }
     }
 }

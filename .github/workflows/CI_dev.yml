@@ -1,3 +1,5 @@
+name: "CI dev"
+
 on:
   push:
     branches: [ dev ]

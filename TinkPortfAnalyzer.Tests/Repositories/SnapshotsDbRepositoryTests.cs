@@ -11,28 +11,36 @@ namespace TinkPortfAnalyzer.Tests.Repositories
 {
     public class SnapshotsDbRepositoryTests : DbRepositoryTestBase
     {
-        private IEnumerable<SecurityInfo> _securitiesInfo1 = new HashSet<SecurityInfo>
-            {
-                new SecurityInfo()
+        private readonly TimeSpan timePrecision = TimeSpan.FromMilliseconds(500);
+        private AvailSecSnapshot _testSnapshot1, _testSnapshot2;
+
+        private SecurityInfo[] CreateSameSecurities(int secCount)
+        {
+            return Enumerable.Range(0, secCount)
+                .Select(i => new SecurityInfo()
                 {
-                    Id = 1,
+                    Id = 0,
                     Currency = Currency.Rub,
                     InstrumentType = InstrumentType.Etf,
                     Name = "Name 1",
                     Ticker = "Ticker 1"
-                },
-                new SecurityInfo()
-                {
-                    Id = 2,
-                    Currency = Currency.Usd,
-                    InstrumentType = InstrumentType.Stock,
-                    Name = "Name 2",
-                    Ticker = "Ticker 2"
-                }
-            };
+                })
+                .ToArray();
+        }
 
-        private readonly TimeSpan timePrecision = TimeSpan.FromMilliseconds(200);
-        private AvailSecSnapshot _testSnapshot1, _testSnapshot2;
+        private SecurityInfo[] CreateDiffSecurities(int secCount)
+        {
+            return Enumerable.Range(0, secCount)
+                .Select(i => new SecurityInfo()
+                {
+                    Id = 0,
+                    Currency = Currency.Rub,
+                    InstrumentType = InstrumentType.Etf,
+                    Name = $"Name {i}",
+                    Ticker = $"Ticker {i}"
+                })
+                .ToArray();
+        }
 
         public SnapshotsDbRepositoryTests()
         {
@@ -40,13 +48,13 @@ namespace TinkPortfAnalyzer.Tests.Repositories
             {
                 Id = 1,
                 CreatedDateTime = new DateTime(2021, 12, 31, 23, 59, 59),
-                Securities = _securitiesInfo1
+                Securities = CreateDiffSecurities(2)
             };
             _testSnapshot2 = new()
             {
                 Id = 2,
                 CreatedDateTime = new DateTime(2021, 12, 31, 23, 59, 59),
-                Securities = _securitiesInfo1
+                Securities = CreateDiffSecurities(2)
             };
         }
 
@@ -66,25 +74,47 @@ namespace TinkPortfAnalyzer.Tests.Repositories
         [Fact]
         public async Task CreateAsync_WithCorrectSecList()
         {
+            var sec1 = CreateDiffSecurities(2);
             var snapsDbRepo = new SnapshotsDbRepository(_context);
             var dateTimeNow = DateTime.Now;
 
-            await snapsDbRepo.CreateAsync(_securitiesInfo1);
+            await snapsDbRepo.CreateAsync(sec1);
 
             var snaps = await snapsDbRepo.GetAllAsync();
             Assert.True(snaps.Count() == 1);
             Assert.Equal(dateTimeNow, snaps.FirstOrDefault().CreatedDateTime, timePrecision);
-            Assert.Equal(_securitiesInfo1, snaps.FirstOrDefault().Securities);
+            Assert.Equal(sec1[0], snaps.FirstOrDefault().Securities.ElementAt(0));
+            Assert.Equal(sec1[1], snaps.FirstOrDefault().Securities.ElementAt(1));
         }
 
         [Fact]
-        public async Task CreateAsync_With2SameSecList()
+        public async Task CreateAsync_With2SameSecurities()
         {
+            var sec1 = CreateSameSecurities(2);
             var snapsDbRepo = new SnapshotsDbRepository(_context);
             var dateTimeNow = DateTime.Now;
 
-            await snapsDbRepo.CreateAsync(_securitiesInfo1);
-            await snapsDbRepo.CreateAsync(_securitiesInfo1);
+            await snapsDbRepo.CreateAsync(sec1);
+
+            var snaps = await snapsDbRepo.GetAllAsync();
+            var snap1 = snaps.ElementAt(0);
+            Assert.True(snaps.Count() == 1);
+            Assert.Equal(dateTimeNow, snap1.CreatedDateTime, timePrecision);
+            Assert.True(snap1.Securities.Count() == 1);
+        }
+
+        [Fact]
+        public async Task CreateAsync_With2SameSecButDiffId()
+        {
+            var sec1 = CreateSameSecurities(2);
+            var sec2 = CreateSameSecurities(2);
+            sec2[0].Id = 3;
+            sec2[1].Id = 4;
+            var snapsDbRepo = new SnapshotsDbRepository(_context);
+            var dateTimeNow = DateTime.Now;
+
+            await snapsDbRepo.CreateAsync(sec1);
+            await snapsDbRepo.CreateAsync(sec2);
 
             var snaps = await snapsDbRepo.GetAllAsync();
             var snap1 = snaps.ElementAt(0);
@@ -93,9 +123,8 @@ namespace TinkPortfAnalyzer.Tests.Repositories
             Assert.Equal(dateTimeNow, snap1.CreatedDateTime, timePrecision);
             //Assert.Equal(dateTimeNow, snap2.CreatedDateTime, timePrecision);
             Assert.Equal(snap1.CreatedDateTime, snap2.CreatedDateTime, timePrecision);
-            Assert.NotEqual(snap1.CreatedDateTime, snap2.CreatedDateTime);
-            Assert.Equal(snap1.Securities, snap2.Securities);
             Assert.NotEqual(snap1.Id, snap2.Id);
+            Assert.Equal(snap1.Securities.ElementAt(0), snap2.Securities.ElementAt(0));
         }
 
         [Fact]

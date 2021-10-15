@@ -1,5 +1,5 @@
 # Tinkoff Portfolio Analyzer
-[![.NET Core Desktop Build Testing](https://github.com/v0idname/TinkoffPortfolioAnalyzer/actions/workflows/CI.yml/badge.svg?branch=dev)](https://github.com/v0idname/TinkoffPortfolioAnalyzer/actions/workflows/CI.yml)
+[![.NET Core Desktop Build Testing](https://github.com/v0idname/TinkoffPortfolioAnalyzer/actions/workflows/CI_dev.yml/badge.svg?branch=dev)](https://github.com/v0idname/TinkoffPortfolioAnalyzer/actions/workflows/CI_dev.yml)
 
 Проект для просмотра пользовательских инвест. портфелей, открытых в брокере "Тинькофф Инвестиции".
 

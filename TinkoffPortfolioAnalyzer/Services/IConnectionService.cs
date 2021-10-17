@@ -4,9 +4,9 @@ using TinkoffPortfolioAnalyzer.Models;
 
 namespace TinkoffPortfolioAnalyzer.Services
 {
-    internal interface IConnectionService
+    public interface IConnectionService
     {
         public Task SetCurrentTokenAsync(TinkoffToken token);
-        public Task<Context> GetConnectionContextAsync();
+        public Task<IContext> GetConnectionContextAsync();
     }
 }

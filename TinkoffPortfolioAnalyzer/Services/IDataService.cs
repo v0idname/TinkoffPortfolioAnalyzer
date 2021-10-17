@@ -5,7 +5,7 @@ using TinkoffPortfolioAnalyzer.Models;
 
 namespace TinkoffPortfolioAnalyzer.Services
 {
-    internal interface IDataService
+    public interface IDataService
     {
         Task SetCurrentTokenAsync(TinkoffToken token);
         Task<IEnumerable<TinkoffAccount>> GetAccountsAsync();

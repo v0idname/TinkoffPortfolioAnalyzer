@@ -6,12 +6,12 @@ using TinkoffPortfolioAnalyzer.Models;
 
 namespace TinkoffPortfolioAnalyzer.Services
 {
-    internal class TinkConnectionService : IConnectionService
+    public class TinkConnectionService : IConnectionService
     {
         private TinkoffToken _currentToken;
-        private Context _context;
+        private IContext _context;
 
-        public Task<Context> GetConnectionContextAsync()
+        public Task<IContext> GetConnectionContextAsync()
         {
             return Task.FromResult(_context);
         }

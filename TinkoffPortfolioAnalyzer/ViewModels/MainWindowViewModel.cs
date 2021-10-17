@@ -119,7 +119,7 @@ namespace TinkoffPortfolioAnalyzer.ViewModels
                 {
                     await _dataService.SetCurrentTokenAsync(CurrentTinkToken);
                     AccountTypes = await _dataService.GetAccountsAsync();
-                } catch (HttpRequestException ex)
+                } catch (HttpRequestException)
                 {
                     // TODO: handle this!!
                 }

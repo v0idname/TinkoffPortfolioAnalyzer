@@ -1,8 +1,9 @@
-﻿using Tinkoff.Trading.OpenApi.Models;
+﻿using System;
+using Tinkoff.Trading.OpenApi.Models;
 
 namespace TinkoffPortfolioAnalyzer.Models
 {
-    internal class TinkoffAccount : Account
+    public class TinkoffAccount : Account, IEquatable<TinkoffAccount>
     {
         public TinkoffAccount(Account acc) : base(acc.BrokerAccountType, acc.BrokerAccountId)
         {
@@ -10,6 +11,12 @@ namespace TinkoffPortfolioAnalyzer.Models
 
         public TinkoffAccount(BrokerAccountType accType, string accId) : base(accType, accId)
         {
+        }
+
+        public bool Equals(TinkoffAccount other)
+        {
+            return BrokerAccountType == other.BrokerAccountType
+                && BrokerAccountId == other.BrokerAccountId;
         }
 
         public override string ToString()

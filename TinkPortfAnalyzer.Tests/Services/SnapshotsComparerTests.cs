@@ -21,7 +21,7 @@ namespace TinkPortfAnalyzer.Tests.Services
                     Id = 0,
                     CreatedDateTime = new DateTime(2021, 12, 31, 23, 59, 59),
                     Securities = Enumerable.Range(0, secCount)
-                    .Select(i => new SecurityInfo()
+                    .Select(j => new SecurityInfo()
                     {
                         Id = 0,
                         Currency = Currency.Rub,

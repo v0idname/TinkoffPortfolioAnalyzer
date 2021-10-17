@@ -1,6 +1,6 @@
 ﻿namespace TinkoffPortfolioAnalyzer.Models
 {
-    internal class PortfolioSecurityInfo : SecurityInfo
+    public class PortfolioSecurityInfo : SecurityInfo
     {
         public decimal AveragePrice { get; set; }
 
